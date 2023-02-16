@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+
+logging:
+  file:
+    name: logs/socmed.log
+    max-size: 10MB
+    max-history: 100
+  pattern: 
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    rolling-file-name: "logs/socmed-%d{yyyy-MM-dd}.%i.log"
+  level:
+    org.springframework.web: ERROR
+    org.ssglobal.revalida.codes: INFO
+    org.hibernate: ERROR
