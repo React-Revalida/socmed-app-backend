@@ -1,5 +1,6 @@
 package org.ssglobal.revalida.codes.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ public class PostsDTO {
     private Integer postId;
 
     @NotNull
+    @NotBlank
     private String message;
 
     private String imageUrl;
