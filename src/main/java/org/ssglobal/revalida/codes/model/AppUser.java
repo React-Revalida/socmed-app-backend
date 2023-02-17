@@ -21,11 +21,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "app_user")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class User {
+public class AppUser {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -47,13 +47,13 @@ public class User {
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, columnDefinition = "text")
     private String password;
 
-    @Column
+    @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean isValidated;
 
-    @Column
+    @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean isActive;
 
     @OneToOne

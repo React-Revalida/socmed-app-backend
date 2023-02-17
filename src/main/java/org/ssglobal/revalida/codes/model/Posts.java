@@ -49,7 +49,7 @@ public class Posts {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private AppUser user;
 
     @OneToMany(mappedBy = "post")
     private Set<Likes> likes;

@@ -68,7 +68,7 @@ public class Profile {
     private String profilePic;
 
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
-    private User profile;
+    private AppUser profile;
 
     @OneToOne
     @JoinColumn(name = "address_id")

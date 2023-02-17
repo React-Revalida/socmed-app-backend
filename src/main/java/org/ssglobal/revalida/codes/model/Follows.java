@@ -35,9 +35,9 @@ public class Follows {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "follower_id")
-    private User follower;
+    private AppUser follower;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "following_id")
-    private User following;
+    private AppUser following;
 }

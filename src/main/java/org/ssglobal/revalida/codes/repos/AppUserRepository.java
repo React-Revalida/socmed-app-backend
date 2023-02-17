@@ -1,9 +1,13 @@
 package org.ssglobal.revalida.codes.repos;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.ssglobal.revalida.codes.model.User;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.ssglobal.revalida.codes.model.AppUser;
+
+public interface AppUserRepository extends JpaRepository<AppUser, Integer> {
+    
+    Optional<AppUser> findByUsername(String username);
 
     boolean existsByUsernameIgnoreCase(String username);
 
