@@ -3,6 +3,8 @@ package org.ssglobal.revalida.codes.service.auth;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
+    private static final Logger LOG = LoggerFactory.getLogger(AppUserDetailsService.class);
+
     private AppUserRepository appUserRepository;
     private PasswordEncoder passwordEncoder;
 
@@ -27,9 +31,13 @@ public class AppUserDetailsService implements UserDetailsService {
 
     public boolean create(final AppUserDTO appUserDTO) {
         final AppUser appUser = new AppUser();
+        LOG.info("Creating user {}", appUserDTO.getUsername());
         mapToEntity(appUserDTO, appUser);
-        appUserRepository.save(appUser);
-        return true;
+        boolean isCreated = appUserRepository.save(appUser) != null;
+        if (isCreated) {
+            LOG.info("User {} created", appUserDTO.getUsername());
+        }
+        return isCreated;
     }
 
     @Override
