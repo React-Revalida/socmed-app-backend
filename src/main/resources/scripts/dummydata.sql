@@ -53,15 +53,15 @@ insert into address(barangay, city, house_no, province, street, subdivision, zip
 
 -- Profile -- 
 
-insert into profile(firstname, gender, lastname, address_id) values
-('Harvey', 'Male', 'Samson', 10000),
-('Bryn', 'Male', 'Bandiola', 10001),
-('Ayn', 'Male', 'Uson', 10002),
-('Lawrence', 'Male', 'Paulino', 10003),
-('Sok', 'Female', 'Yi', 10004),
-('Dave', 'Male', 'Ace', 10005),
-('John', 'Male', 'Dew', 10006),
-('Traci', 'Female', 'Pau', 10007);
+insert into profile(firstname, gender, lastname, address_id, register_date, last_updated) values
+('Harvey', 'MALE', 'Samson', 10000, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('Bryn', 'MALE', 'Bandiola', 10001, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('Ayn', 'MALE', 'Uson', 10002, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('Lawrence', 'MALE', 'Paulino', 10003, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('Sok', 'FEMALE', 'Yi', 10004, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('Dave', 'MALE', 'Ace', 10005, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('John', 'MALE', 'Dew', 10006, '2023-02-20 13:17:32', '2023-02-20 13:17:32'),
+('Traci', 'FEMALE', 'Pau', 10007, '2023-02-20 13:17:32', '2023-02-20 13:17:32');
 
 -- AppUser --
 
