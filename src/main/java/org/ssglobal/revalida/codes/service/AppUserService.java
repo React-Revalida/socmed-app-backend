@@ -11,6 +11,7 @@ import org.ssglobal.revalida.codes.enums.Gender;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Profile;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
+import org.ssglobal.revalida.codes.repos.FollowsRepository;
 import org.ssglobal.revalida.codes.repos.ProfileRepository;
 
 import java.io.IOException;
@@ -28,14 +29,16 @@ public class AppUserService {
     private final PasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
     private final ProfileRepository profileRepository;
+    private final FollowsRepository followsRepository;
 
     private final ImageService imageService;
 
     public AppUserService(PasswordEncoder passwordEncoder, AppUserRepository appUserRepository,
-            ProfileRepository profileRepository, ImageService imageService) {
+            ProfileRepository profileRepository, FollowsRepository followsRepository, ImageService imageService) {
         this.passwordEncoder = passwordEncoder;
         this.appUserRepository = appUserRepository;
         this.profileRepository = profileRepository;
+        this.followsRepository = followsRepository;
         this.imageService = imageService;
     }
 
@@ -77,7 +80,12 @@ public class AppUserService {
         appUserDTO.setIsActive(appUser.getIsActive());
         appUserDTO.setIsValidated(appUser.getIsValidated());
         appUserDTO.setProfile(appUser.getProfile().getProfileId());
+        appUserDTO.setName(String.format("%s %s", appUser.getProfile().getFirstname(), appUser.getProfile().getLastname()));
         appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
+        final Integer followers = followsRepository.countFollowersByUserUsername(appUser.getUsername());
+        final Integer following = followsRepository.countFollowingByUserUsername(appUser.getUsername());
+        appUserDTO.setFollowers(followers);
+        appUserDTO.setFollowing(following);
         return appUserDTO;
     }
 

@@ -41,6 +41,11 @@ public class AppUserDTO {
 
     private Integer profile;
 
+    private String name;
+
     private String profilePic;
 
+    private Integer followers;
+
+    private Integer following;
 }
