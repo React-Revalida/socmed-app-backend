@@ -36,13 +36,11 @@ public class Follows {
     )
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "follower_id")
-    @JsonIgnore
     private AppUser follower;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "following_id")
-    @JsonIgnore
     private AppUser following;
 }

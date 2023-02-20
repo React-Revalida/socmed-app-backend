@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ssglobal.revalida.codes.dto.FollowsDTO;
-import org.ssglobal.revalida.codes.model.Follows;
 import org.ssglobal.revalida.codes.service.FollowsService;
 
 @RestController
@@ -23,12 +22,16 @@ public class FollowsController {
 		this.followsService = followsService;
 	}
 	
-	@GetMapping("/following/{id}")
-	public ResponseEntity<Set<Follows>> getUserFollowing(@PathVariable("id") Integer id){
-		FollowsDTO followsDTO = new FollowsDTO();
-		followsDTO.setFollower(id);
-		return new ResponseEntity<>(followsService.getFollowing(followsDTO), null, HttpStatus.SC_OK);
+	@GetMapping("/following/{username}")
+	public ResponseEntity<Set<FollowsDTO>> getUserFollowing(@PathVariable String username){
+		Set<FollowsDTO> followsDTOTbl = followsService.getFollowing(username);
+		return new ResponseEntity<>(followsDTOTbl, null, HttpStatus.SC_OK);
 	}
 	
+	@GetMapping("/followers/{username}")
+	public ResponseEntity<Set<FollowsDTO>> getUserFollowers(@PathVariable String username){
+		Set<FollowsDTO> followsDTOTbl = followsService.getFollowers(username);
+		return new ResponseEntity<>(followsDTOTbl, null, HttpStatus.SC_OK);
+	}
 
 }

@@ -66,14 +66,14 @@ insert into profile(firstname, gender, lastname, address_id, register_date, last
 -- AppUser --
 
 insert into app_user(date_created, email, last_updated, password, username, profile_id) values 
-('2023-02-20 13:17:32', 'harvey@gmail.com', '2023-02-20 13:17:32', 'admin2255', 'harveysamson', 10000),
-('2023-02-20 13:17:32', 'bryn@gmail.com', '2023-02-20 13:17:32', 'admin2255', 'brynbandiola', 10001),
-('2023-02-20 13:17:32', 'ayn@gmail.com', '2023-02-20 13:17:32', 'admin2255', 'aynuson', 10002),
-('2023-02-20 13:17:32', 'lawrence@gmail.com', '2023-02-20 13:17:32', 'admin2255', 'lawrencepaulino', 10003),
-('2023-02-20 13:17:32', 'sok@gmail.com', '2023-02-20 13:17:32', 'sok123', 'sokyi', 10004),
-('2023-02-20 13:17:32', 'dave@gmail.com', '2023-02-20 13:17:32', 'dave123', 'daveace', 10005),
-('2023-02-20 13:17:32', 'john@gmail.com', '2023-02-20 13:17:32', 'john123', 'johndew', 10006),
-('2023-02-20 13:17:32', 'traci@gmail.com', '2023-02-20 13:17:32', 'traci123', 'tracipau', 10007);
+('2023-02-20 13:17:32', 'harvey@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'harveysamson', 10000),
+('2023-02-20 13:17:32', 'bryn@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'bryn', 10001),
+('2023-02-20 13:17:32', 'ayn@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'aynuson', 10002),
+('2023-02-20 13:17:32', 'lawrence@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'lawrencepaulino', 10003),
+('2023-02-20 13:17:32', 'sok@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'sokyi', 10004),
+('2023-02-20 13:17:32', 'dave@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'daveace', 10005),
+('2023-02-20 13:17:32', 'john@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'johndew', 10006),
+('2023-02-20 13:17:32', 'traci@gmail.com', '2023-02-20 13:17:32', '$2a$12$9k5vh/lQwiQrfAuu5FzZteLWkc4UPOv4OcFvNHQDkga4lxONn2cpO', 'tracipau', 10007);
 
 -- Posts --
 
