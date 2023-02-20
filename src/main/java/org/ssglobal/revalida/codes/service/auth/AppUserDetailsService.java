@@ -26,11 +26,11 @@ public class AppUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         AppUser user = appUserRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
-        return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getIsActive()));
+        return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getIsValidated()));
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(Boolean active) {
-        return List.of(new SimpleGrantedAuthority(active ? "USER_ACTIVE" : "USER_INACTIVE"));
+    private Collection<GrantedAuthority> mapRolesToAuthorities(Boolean validated) {
+        return List.of(new SimpleGrantedAuthority(validated ? "USER_VALIDATED" : "USER_NOT_VALIDATED"));
     }
 
 }
