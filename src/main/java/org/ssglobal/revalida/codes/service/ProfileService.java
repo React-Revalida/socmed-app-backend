@@ -33,6 +33,7 @@ public class ProfileService {
         this.imageService = imageService;
     }
 
+    @Transactional
     public boolean updateProfile(String username, ProfileDTO profileDTO, final MultipartFile profilePicture)
             throws IOException {
         Profile profile = profileRepository.findByProfile_Username(username);
@@ -40,7 +41,7 @@ public class ProfileService {
             throw new NotFoundException("Profile not found");
         }
         if (profilePicture != null) {
-            imageService.profileUpload(profileDir, profilePicture, profile);
+            imageService.profileUpdate(profileDir, profilePicture, profile);
         }
         mapToProfileEntity(profileDTO, profile);
         boolean isUpdated = profileRepository.save(profile) != null;
@@ -51,7 +52,6 @@ public class ProfileService {
     public boolean updateOrAddAddress(String username, AddressDTO addressDTO) {
         Address address = addressRepository.findByAddress_Profile_Username(username);
         if (address == null) {
-            // create new address
             address = new Address();
             mapToAddressEntity(addressDTO, address);
             Profile profile = profileRepository.findByProfile_Username(username);
@@ -77,19 +77,18 @@ public class ProfileService {
         profile.setGender(Gender.valueOf(profileDTO.getGender()));
         profile.setBirthdate(profileDTO.getBirthdate());
         profile.setPhone(profileDTO.getPhone());
-        profile.setDescription(profileDTO.getDescription());
-        profile.setProfilePic(profileDTO.getProfilePic());
-        return new Profile();
+        profile.setDescription(profileDTO.getBio());
+        return profile;
     }
 
     private Address mapToAddressEntity(AddressDTO addressDTO, Address address) {
-        address.setHouseNo(address.getHouseNo());
-        address.setStreet(address.getStreet());
-        address.setSubdivision(address.getSubdivision());
-        address.setBarangay(address.getBarangay());
-        address.setCity(address.getCity());
-        address.setProvince(address.getProvince());
-        address.setZip(address.getZip());
+        address.setHouseNo(addressDTO.getHouseNo());
+        address.setStreet(addressDTO.getStreet());
+        address.setSubdivision(addressDTO.getSubdivision());
+        address.setBarangay(addressDTO.getBarangay());
+        address.setCity(addressDTO.getCity());
+        address.setProvince(addressDTO.getProvince());
+        address.setZip(addressDTO.getZip());
         return address;
     }
 }

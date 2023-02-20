@@ -31,7 +31,8 @@ public class ImageService {
     @Value("${do.space.bucket}")
     private String doSpaceBucket;
 
-    public Profile profileUpload(String directory2Upload, MultipartFile multipartFile, Profile profile) throws IOException {
+    public Profile profileUpload(String directory2Upload, MultipartFile multipartFile, Profile profile)
+            throws IOException {
         if (multipartFile.isEmpty()) {
             profile.setProfilePic("");
             return profile;
@@ -43,6 +44,31 @@ public class ImageService {
         saveImageToServer(multipartFile, key);
         profile.setProfilePic(key);
         return profile;
+    }
+
+    public Profile profileUpdate(String directory2Upload, MultipartFile multipartFile, Profile profile)
+            throws IOException {
+        if (multipartFile.isEmpty()) {
+            return profile;
+        }
+        String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+        String imgName = FilenameUtils.removeExtension(multipartFile.getOriginalFilename());
+        imgName = "profile" + "_" + System.currentTimeMillis();
+        String key = directory2Upload + imgName + "." + extension;
+        updateImageToServer(multipartFile, key, profile.getProfilePic());
+        profile.setProfilePic(key);
+        return profile;
+    }
+
+    private void updateImageToServer(MultipartFile multipartFile, String key, String existingPic) throws IOException {
+        if (existingPic != null && !existingPic.isEmpty()) {
+            deleteImageFromServer(existingPic);
+        }
+        saveImageToServer(multipartFile, key);
+    }
+
+    private void deleteImageFromServer(String existingPic) {
+        s3Client.deleteObject(doSpaceBucket, existingPic);
     }
 
     private void saveImageToServer(MultipartFile multipartFile, String key) throws IOException {
@@ -76,7 +102,8 @@ public class ImageService {
         expTimeMillis += 1000 * 60 * 60;
         expiration.setTime(expTimeMillis);
         // Generate the presigned URL
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(doSpaceBucket, imageKey)
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(doSpaceBucket,
+                imageKey)
                 .withMethod(HttpMethod.GET)
                 .withExpiration(expiration);
         URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);

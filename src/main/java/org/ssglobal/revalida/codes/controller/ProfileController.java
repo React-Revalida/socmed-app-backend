@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.ProfileDTO;
+import org.ssglobal.revalida.codes.dto.AddressDTO;
 import org.ssglobal.revalida.codes.service.AppUserService;
 import org.ssglobal.revalida.codes.service.ProfileService;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/profiles")
@@ -53,6 +55,17 @@ public class ProfileController {
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");
         Boolean isUpdated = profileService.updateProfile(username, profileDTO, profilePic);
+        return new ResponseEntity<>(isUpdated, HttpStatus.OK);
+    }
+
+    @PostMapping("/update/address")
+    public ResponseEntity<Boolean> updateMyAddress(
+            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
+            @RequestBody @Valid final AddressDTO addressDTO) {
+        String jwtToken = token.replace("Bearer ", "");
+        Jwt jwt = jwtDecoder.decode(jwtToken);
+        String username = jwt.getClaim("user");
+        Boolean isUpdated = profileService.updateOrAddAddress(username, addressDTO);
         return new ResponseEntity<>(isUpdated, HttpStatus.OK);
     }
 

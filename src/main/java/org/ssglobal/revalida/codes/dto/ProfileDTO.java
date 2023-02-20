@@ -42,7 +42,7 @@ public class ProfileDTO {
     private String phone;
 
     @Size(max = 160)
-    private String description;
+    private String bio;
 
     private String profilePic;
 
