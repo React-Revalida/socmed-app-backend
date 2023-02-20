@@ -27,3 +27,4 @@ do:
     endpoint: syd1.digitaloceanspaces.com
     region: syd1
     bucket: seven-seven-global-revalida-r2
+    profile-dir: profile-images/

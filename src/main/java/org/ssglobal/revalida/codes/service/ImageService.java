@@ -2,6 +2,8 @@ package org.ssglobal.revalida.codes.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.model.Profile;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.Transfer;
@@ -20,7 +24,6 @@ import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 
 @Service
 public class ImageService {
-    private final String FOLDER = "profileImages/";
 
     @Autowired
     private AmazonS3 s3Client;
@@ -28,7 +31,7 @@ public class ImageService {
     @Value("${do.space.bucket}")
     private String doSpaceBucket;
 
-    public Profile profileUpload(MultipartFile multipartFile, Profile profile) throws IOException {
+    public Profile profileUpload(String directory2Upload, MultipartFile multipartFile, Profile profile) throws IOException {
         if (multipartFile.isEmpty()) {
             profile.setProfilePic("");
             return profile;
@@ -36,7 +39,7 @@ public class ImageService {
         String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         String imgName = FilenameUtils.removeExtension(multipartFile.getOriginalFilename());
         imgName = "profile" + "_" + System.currentTimeMillis();
-        String key = FOLDER + imgName + "." + extension;
+        String key = directory2Upload + imgName + "." + extension;
         saveImageToServer(multipartFile, key);
         profile.setProfilePic(key);
         return profile;
@@ -64,6 +67,20 @@ public class ImageService {
         } catch (InterruptedException e) {
             throw new IOException(e);
         }
+    }
+
+    public String getImageUrl(String imageKey) {
+        // Set the expiration time of the URL to one hour from now
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60;
+        expiration.setTime(expTimeMillis);
+        // Generate the presigned URL
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(doSpaceBucket, imageKey)
+                .withMethod(HttpMethod.GET)
+                .withExpiration(expiration);
+        URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+        return url.toString();
     }
 
 }

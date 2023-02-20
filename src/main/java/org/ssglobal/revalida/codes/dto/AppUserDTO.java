@@ -41,4 +41,6 @@ public class AppUserDTO {
 
     private Integer profile;
 
+    private String profilePic;
+
 }

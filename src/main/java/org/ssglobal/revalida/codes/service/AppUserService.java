@@ -1,9 +1,11 @@
 package org.ssglobal.revalida.codes.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.RegistrationDTO;
 import org.ssglobal.revalida.codes.enums.Gender;
 import org.ssglobal.revalida.codes.model.AppUser;
@@ -19,6 +21,9 @@ import org.slf4j.LoggerFactory;
 @Service
 public class AppUserService {
     private static final Logger LOG = LoggerFactory.getLogger(AppUserService.class);
+
+    @Value("${do.space.profile-dir}")
+    private String profileDir;
 
     private final PasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
@@ -39,7 +44,7 @@ public class AppUserService {
             throws IOException {
         final Profile profile = new Profile();
         if (profilePicture != null) {
-            imageService.profileUpload(profilePicture, profile);
+            imageService.profileUpload(profileDir, profilePicture, profile);
         }
         mapToAppProfileRegistrationEntity(registrationDTO, profile);
         Profile savedProfile = profileRepository.save(profile);
@@ -58,6 +63,22 @@ public class AppUserService {
         appUser.setProfile(savedProfile);
         appUserRepository.save(appUser);
         LOG.info("User {} created", appUser.getUsername());
+    }
+
+    public AppUserDTO findByUsername(String username) {
+        AppUser appUser = appUserRepository.findByUsernameIgnoreCase(username);
+        return mapToAppUserDTO(appUser, new AppUserDTO());
+    }
+
+    private AppUserDTO mapToAppUserDTO(AppUser appUser, AppUserDTO appUserDTO) {
+        appUserDTO.setUserId(appUser.getUserId());
+        appUserDTO.setUsername(appUser.getUsername());
+        appUserDTO.setEmail(appUser.getEmail());
+        appUserDTO.setIsActive(appUser.getIsActive());
+        appUserDTO.setIsValidated(appUser.getIsValidated());
+        appUserDTO.setProfile(appUser.getProfile().getProfileId());
+        appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
+        return appUserDTO;
     }
 
     private AppUser mapToAppUserRegistrationEntity(RegistrationDTO registrationDTO, AppUser appUser) {
