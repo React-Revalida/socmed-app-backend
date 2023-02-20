@@ -29,6 +29,10 @@ public class ImageService {
     private String doSpaceBucket;
 
     public Profile profileUpload(MultipartFile multipartFile, Profile profile) throws IOException {
+        if (multipartFile.isEmpty()) {
+            profile.setProfilePic("");
+            return profile;
+        }
         String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         String imgName = FilenameUtils.removeExtension(multipartFile.getOriginalFilename());
         imgName = "profile" + "_" + System.currentTimeMillis();
