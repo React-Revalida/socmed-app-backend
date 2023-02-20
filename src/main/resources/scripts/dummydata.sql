@@ -1,3 +1,23 @@
+-- To reset the sequence and delete the data from tables
+
+--/*
+alter sequence address_sequence restart;
+alter sequence profile_sequence restart;
+alter sequence user_sequence restart;
+alter sequence comments_sequence restart;
+alter sequence follows_sequence restart;
+alter sequence likes_sequence restart;
+alter sequence posts_sequence restart;
+
+delete from follows;
+delete from likes;
+delete from comments;
+delete from posts;
+delete from app_user;
+delete from profile;
+delete from address;
+--*/
+
 alter table address 
 alter column address_id set default nextval('address_sequence');
 
@@ -85,6 +105,22 @@ insert into likes(liked, post_id, user_id) values
 (true, 10002, 10000),
 (true, 10003, 10000),
 (true, 10004, 10000);
+
+-- Follows --
+
+insert into follows(follower_id, following_id) values
+(10000, 10001),
+(10000, 10002),
+(10000, 10003),
+(10001, 10000),
+(10001, 10002),
+(10001, 10003),
+(10002, 10000),
+(10002, 10001),
+(10002, 10003),
+(10003, 10000),
+(10003, 10001),
+(10003, 10002);
 
 
 
