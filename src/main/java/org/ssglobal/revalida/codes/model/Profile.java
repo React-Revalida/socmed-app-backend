@@ -60,7 +60,7 @@ public class Profile {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime registerdate;
+    private OffsetDateTime registerDate;
 
     @LastModifiedDate
     @Column(nullable = false)
