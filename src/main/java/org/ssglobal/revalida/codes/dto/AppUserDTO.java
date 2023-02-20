@@ -43,6 +43,10 @@ public class AppUserDTO {
 
     private String name;
 
+    private String bio;
+
+    private String gender;
+
     private String profilePic;
 
     private Integer followers;

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,8 +32,9 @@ public class ProfileDTO {
     private String lastname;
 
     @NotNull
-    private Gender gender;
+    private String gender;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     @Size(min = 11, max = 11, message = "contact number must be 11 digits")

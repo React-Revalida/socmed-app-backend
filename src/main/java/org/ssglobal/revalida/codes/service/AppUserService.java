@@ -83,6 +83,8 @@ public class AppUserService {
         appUserDTO.setIsValidated(appUser.getIsValidated());
         appUserDTO.setProfile(appUser.getProfile().getProfileId());
         appUserDTO.setName(String.format("%s %s", appUser.getProfile().getFirstname(), appUser.getProfile().getLastname()));
+        appUserDTO.setBio(appUser.getProfile().getDescription());
+        appUserDTO.setGender(appUser.getProfile().getGender().toString());
         appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
         final Integer followers = followsRepository.countFollowersByUserUsername(appUser.getUsername());
         final Integer following = followsRepository.countFollowingByUserUsername(appUser.getUsername());
