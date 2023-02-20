@@ -48,4 +48,6 @@ public class AppUserDTO {
     private Integer followers;
 
     private Integer following;
+
+    private AddressDTO address;
 }

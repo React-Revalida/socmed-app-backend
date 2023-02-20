@@ -5,9 +5,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.ssglobal.revalida.codes.dto.AddressDTO;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.RegistrationDTO;
 import org.ssglobal.revalida.codes.enums.Gender;
+import org.ssglobal.revalida.codes.model.Address;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Profile;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
@@ -86,7 +88,24 @@ public class AppUserService {
         final Integer following = followsRepository.countFollowingByUserUsername(appUser.getUsername());
         appUserDTO.setFollowers(followers);
         appUserDTO.setFollowing(following);
+        appUserDTO.setAddress(mapToAddressDTO(appUser.getProfile().getAddress()));
         return appUserDTO;
+    }
+
+    private AddressDTO mapToAddressDTO(Address address) {
+        if (address != null) {
+            AddressDTO addressDTO = new AddressDTO();
+            addressDTO.setAddressId(address.getAddressId());
+            addressDTO.setHouseNo(address.getHouseNo());
+            addressDTO.setStreet(address.getStreet());
+            addressDTO.setSubdivision(address.getSubdivision());
+            addressDTO.setBarangay(address.getBarangay());
+            addressDTO.setCity(address.getCity());
+            addressDTO.setProvince(address.getProvince());
+            addressDTO.setZip(address.getZip());
+            return addressDTO;
+        }
+        return null;
     }
 
     private AppUser mapToAppUserRegistrationEntity(RegistrationDTO registrationDTO, AppUser appUser) {
