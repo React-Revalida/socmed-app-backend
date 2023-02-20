@@ -33,8 +33,6 @@ public class ProfileDTO {
 
     private LocalDate birthdate;
 
-    private LocalDate registerdate;
-
     @Size(min = 11, max = 11, message = "contact number must be 11 digits")
     @Pattern(regexp = "^(09)\\d{9}$", message = "contact number must start with 09 and must be 11 digits")
     private String phone;

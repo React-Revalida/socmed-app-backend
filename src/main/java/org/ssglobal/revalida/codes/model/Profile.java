@@ -13,8 +13,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.ssglobal.revalida.codes.enums.Gender;
 
@@ -55,8 +58,13 @@ public class Profile {
     @Column
     private LocalDate birthdate;
 
-    @Column
-    private LocalDate registerdate;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime registerdate;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private OffsetDateTime lastUpdated;
 
     @Column(length = 11)
     private String phone;

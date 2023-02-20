@@ -19,3 +19,11 @@ logging:
     org.springframework.web: ERROR
     org.ssglobal.revalida.codes: INFO
     org.hibernate: ERROR
+
+do:
+  space:
+    key: DO009PUR4FBQ6X666NBD
+    secret: uHGRa/MiZykgNgPL4CaQaci7+HRy4hVGLR4e75lrV9c
+    endpoint: syd1.digitaloceanspaces.com
+    region: syd1
+    bucket: seven-seven-global-revalida-r2
