@@ -1,5 +1,7 @@
 package org.ssglobal.revalida.codes.repos;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,4 +13,10 @@ public interface FollowsRepository extends JpaRepository<Follows, Integer> {
 
     @Query("SELECT COUNT(f) FROM Follows f WHERE f.follower.username = :username")
     Integer countFollowingByUserUsername(@Param("username") String username);
+    
+    @Query("select f.following.userId from Follows f where f.follower.username = :username")
+    Set<Integer> findFollowingByUsername(@Param("username") String username);
+    
+    @Query("select f.follower.userId from Follows f where f.following.username = :username")
+    Set<Integer> findFollowersByUsername(@Param("username") String username);
 }
