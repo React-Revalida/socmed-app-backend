@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
-import org.ssglobal.revalida.codes.dto.LikesDTO;
+import org.ssglobal.revalida.codes.dto.FollowsDTO;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Posts;
@@ -16,34 +16,39 @@ import org.ssglobal.revalida.codes.repos.PostsRepository;
 @Service
 public class PostsService {
 
-	private final AppUserRepository appUserRepository;
 	private final PostsRepository postRepository;
 
 	public PostsService(AppUserRepository appUserRepository, PostsRepository postRepository) {
-		this.appUserRepository = appUserRepository;
 		this.postRepository = postRepository;
 	}
 
 	public Set<PostsDTO> getPostsByUsername(String username) {
-		Optional<AppUser> user = appUserRepository.findByUsername(username);
-		Set<PostsDTO> postDTOTbl = new HashSet<>();
+		Set<Integer> postIds = postRepository.findAllPostsIdByUsername(username);
+		Set<Posts> postsTbl = new HashSet<>();
+		System.out.println(postIds);
 
-		if (user.isPresent()) {
-			AppUser userConfirmed = appUserRepository.findByUsernameIgnoreCase(username);
-			List<Posts> userPosts = postRepository.findAll();
-			for (Posts post : userPosts) {
-				if (userConfirmed.getUserId().equals(post.getUser().getUserId())) {
-					PostsDTO postDTO = new PostsDTO();
-					postDTO.setPostId(post.getPostId());
-					postDTO.setMessage(post.getMessage());
-					postDTO.setImageUrl(post.getImageUrl());
-					postDTO.setTimestamp(post.getTimestamp());
-					postDTO.setDeleted(post.getDeleted());
-					postDTO.setUser(post.getUser().getUserId());
-					postDTOTbl.add(postDTO);
-				};
-			};
-		};
-		return postDTOTbl;
-	};
+		for(Integer postId: postIds) {
+    		Optional<Posts> userPost = postRepository.findById(postId);
+    		if (userPost.isPresent()) {
+    			postsTbl.add(userPost.get());
+    		}
+		}
+		return mapToPostsTbl (postsTbl, new HashSet<>());
+	}
+			
+	private Set<PostsDTO> mapToPostsTbl (Set<Posts> postsTbl, Set<PostsDTO> postsDTOTbl) {
+		for (Posts post: postsTbl) {
+			System.out.println(post.getMessage());
+			PostsDTO postsDTO = new PostsDTO();
+			postsDTO.setPostId(post.getPostId());
+			postsDTO.setMessage(post.getMessage());
+			postsDTO.setImageUrl(post.getImageUrl());
+			postsDTO.setTimestamp(post.getTimestamp());
+			postsDTO.setDeleted(post.getDeleted());
+			postsDTO.setUser(post.getUser().getUserId());
+			postsDTOTbl.add(postsDTO);
+		}
+		
+		return postsDTOTbl;
+	}
 }
