@@ -13,6 +13,8 @@ import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
 import org.ssglobal.revalida.codes.repos.PostsRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PostsService {
 
@@ -34,6 +36,26 @@ public class PostsService {
     		}
 		}
 		return mapToPostsTbl (postsTbl, new HashSet<>());
+	}
+	
+	@Transactional
+	public Boolean deletePostById(Integer id) {
+		Optional<Posts> post = postRepository.findById(id);
+		if (post.isPresent()) {
+			PostsDTO postDTO = new PostsDTO();
+			postDTO.setPostId(post.get().getPostId());
+			mapDeletedToPostEntity(postDTO, post.get());
+	        boolean deleted = postRepository.save(post.get()) != null;
+	        return deleted;
+		}
+		
+		return false;
+	}
+	
+	private Posts mapDeletedToPostEntity(PostsDTO postDTO, Posts post) {
+		post.setPostId(postDTO.getPostId());
+		post.setDeleted(true);
+		return post;
 	}
 			
 	private Set<PostsDTO> mapToPostsTbl (Set<Posts> postsTbl, Set<PostsDTO> postsDTOTbl) {

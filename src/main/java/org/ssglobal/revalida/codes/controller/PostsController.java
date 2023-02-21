@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
@@ -27,6 +28,12 @@ public class PostsController {
 		Set<PostsDTO> postsDTOTbl = postsService.getPostsByUsername(username);
 		return new ResponseEntity<>(postsDTOTbl, null, HttpStatus.SC_OK);
 
+	}
+	
+	@PostMapping("/posts/delete/{id}")
+	public ResponseEntity<Boolean> deletePost(@PathVariable Integer id) {
+		Boolean deleted = postsService.deletePostById(id);
+		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
 	}
 
 }
