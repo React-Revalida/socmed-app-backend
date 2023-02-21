@@ -17,6 +17,7 @@ import org.ssglobal.revalida.codes.repos.FollowsRepository;
 import org.ssglobal.revalida.codes.repos.ProfileRepository;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,9 @@ public class AppUserService {
         appUserDTO.setBio(appUser.getProfile().getDescription());
         appUserDTO.setGender(appUser.getProfile().getGender().toString());
         appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        String dateJoined = appUser.getDateCreated().format(formatter);
+        appUserDTO.setDateJoined(dateJoined);
         final Integer followers = followsRepository.countFollowersByUserUsername(appUser.getUsername());
         final Integer following = followsRepository.countFollowingByUserUsername(appUser.getUsername());
         appUserDTO.setFollowers(followers);

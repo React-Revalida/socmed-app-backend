@@ -1,5 +1,7 @@
 package org.ssglobal.revalida.codes.dto;
 
+import java.time.OffsetDateTime;
+
 import org.ssglobal.revalida.codes.validators.constraints.UniqueEmail;
 import org.ssglobal.revalida.codes.validators.constraints.UniqueUsername;
 
@@ -54,4 +56,6 @@ public class AppUserDTO {
     private Integer following;
 
     private AddressDTO address;
+
+    private String dateJoined;
 }
