@@ -1,12 +1,14 @@
 package org.ssglobal.revalida.codes.service;
 
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.ssglobal.revalida.codes.dto.FollowsDTO;
+import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Posts;
@@ -17,11 +19,18 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class PostsService {
+	
+    @Value("${do.space.post-dir}")
+    private String postDir;
 
 	private final PostsRepository postRepository;
+	private final AppUserRepository appUserRepository;
+	private final ImageService imageService;
 
-	public PostsService(AppUserRepository appUserRepository, PostsRepository postRepository) {
+	public PostsService(PostsRepository postRepository, AppUserRepository appUserRepository, ImageService imageService) {
 		this.postRepository = postRepository;
+		this.appUserRepository = appUserRepository;
+		this.imageService = imageService;
 	}
 
 	public Set<PostsDTO> getPostsByUsername(String username) {
@@ -50,6 +59,36 @@ public class PostsService {
 		}
 		
 		return false;
+	}
+	
+	@Transactional
+	public Boolean createPost(final PostsDTO postDTO, final MultipartFile postImage, String username) 
+			throws IOException {
+		final Posts post = new Posts();
+		if (postImage != null) {
+			imageService.postUpload(postDir, postImage, post);
+		}
+		
+		Optional<AppUser> user = appUserRepository.findByUsername(username);
+		if (user.isPresent()) {
+			mapToPostEntity(postDTO, post, user.get());
+			Posts newPost = postRepository.save(post);
+			if (newPost != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private Posts mapToPostEntity(PostsDTO postDTO, Posts post, AppUser user) {
+		post.setDeleted(false);
+		post.setImageUrl(post.getImageUrl());
+		post.setMessage(postDTO.getMessage());
+		post.setPostId(postDTO.getPostId());
+		post.setTimestamp(new Timestamp(System.currentTimeMillis()).toString());
+		post.setUser(user);
+		return post;
 	}
 	
 	private Posts mapDeletedToPostEntity(PostsDTO postDTO, Posts post) {

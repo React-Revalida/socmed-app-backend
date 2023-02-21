@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.model.Profile;
 
 import com.amazonaws.HttpMethod;
@@ -58,6 +59,21 @@ public class ImageService {
         updateImageToServer(multipartFile, key, profile.getProfilePic());
         profile.setProfilePic(key);
         return profile;
+    }
+    
+    public Posts postUpload(String directory2Upload, MultipartFile multipartFile, Posts post) 
+    		throws IOException {
+    	if (multipartFile.isEmpty()) {
+    		return post;
+    	}
+    	
+        String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+        String imgName = FilenameUtils.removeExtension(multipartFile.getOriginalFilename());
+        imgName = "post" + "_" + System.currentTimeMillis();
+        String key = directory2Upload + imgName + "." + extension;
+        saveImageToServer(multipartFile, key);
+        post.setImageUrl(key);;
+        return post;
     }
 
     private void updateImageToServer(MultipartFile multipartFile, String key, String existingPic) throws IOException {
