@@ -9,7 +9,7 @@ import org.ssglobal.revalida.codes.model.Posts;
 
 public interface PostsRepository extends JpaRepository<Posts, Integer> {
 
-	@Query("select p.postId from Posts p where p.user.username = :username")
+	@Query("select p.postId from Posts p where p.user.username = :username and p.deleted <> TRUE")
 	Set<Integer> findAllPostsIdByUsername(@Param("username") String username);
 
 }
