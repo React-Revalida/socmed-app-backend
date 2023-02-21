@@ -96,6 +96,13 @@ public class ImageService {
     }
 
     public String getImageUrl(String imageKey) {
+        if (imageKey == null || imageKey.trim().isEmpty()) {
+            return null;
+        }
+        boolean imageExists = s3Client.doesObjectExist(doSpaceBucket, imageKey);
+        if (!imageExists) {
+            return imageKey;
+        }
         // Set the expiration time of the URL to one hour from now
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
