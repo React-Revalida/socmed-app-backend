@@ -81,13 +81,18 @@ public class AppUserService {
         appUserDTO.setFirstname(appUser.getProfile().getFirstname());
         appUserDTO.setMiddlename(appUser.getProfile().getMiddlename());
         appUserDTO.setLastname(appUser.getProfile().getLastname());
+        appUserDTO.setPhone(appUser.getProfile().getPhone());
         appUserDTO.setBirthdate(appUser.getProfile().getBirthdate());
         appUserDTO.setUsername(appUser.getUsername());
         appUserDTO.setEmail(appUser.getEmail());
         appUserDTO.setIsActive(appUser.getIsActive());
         appUserDTO.setIsValidated(appUser.getIsValidated());
         appUserDTO.setProfile(appUser.getProfile().getProfileId());
-        appUserDTO.setName(String.format("%s %s", appUser.getProfile().getFirstname(), appUser.getProfile().getLastname()));
+        String name = appUser.getProfile().getMiddlename() != null
+                ? String.format("%s %s %s", appUser.getProfile().getFirstname(), appUser.getProfile().getMiddlename(),
+                        appUser.getProfile().getLastname())
+                : String.format("%s %s", appUser.getProfile().getFirstname(), appUser.getProfile().getLastname());
+        appUserDTO.setName(name);
         appUserDTO.setBio(appUser.getProfile().getDescription());
         appUserDTO.setGender(appUser.getProfile().getGender().toString());
         appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));

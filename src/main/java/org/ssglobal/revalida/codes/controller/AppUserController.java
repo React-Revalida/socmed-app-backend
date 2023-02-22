@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,27 +60,27 @@ public class AppUserController {
         return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/me/update-profile")
-    public ResponseEntity<Boolean> updateMyProfile(
+    @PutMapping(value = "/me/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AppUserDTO> updateMyProfile(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
             @RequestPart("user") @Valid final ProfileDTO profileDTO,
             @RequestPart("profile") MultipartFile profilePic) throws IOException {
         String jwtToken = token.replace("Bearer ", "");
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");
-        Boolean isUpdated = profileService.updateProfile(username, profileDTO, profilePic);
-        return new ResponseEntity<>(isUpdated, HttpStatus.OK);
+        AppUserDTO appUserDTO = profileService.updateProfile(username, profileDTO, profilePic);
+        return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/me/update-address")
-    public ResponseEntity<Boolean> updateMyAddress(
+    @PutMapping("/me/update-address")
+    public ResponseEntity<AppUserDTO> updateMyAddress(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
             @RequestBody @Valid final AddressDTO addressDTO) {
         String jwtToken = token.replace("Bearer ", "");
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");
-        Boolean isUpdated = profileService.updateOrAddAddress(username, addressDTO);
-        return new ResponseEntity<>(isUpdated, HttpStatus.OK);
+        AppUserDTO appUserDTO = profileService.updateOrAddAddress(username, addressDTO);
+        return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
     }
 
 }
