@@ -11,6 +11,6 @@ import org.ssglobal.revalida.codes.model.Likes;
 
 public interface LikesRepository extends JpaRepository<Likes, Integer> {
 
-    @Query("select l.user from Likes l where l.post.postId = :post") 
+    @Query("select l.user from Likes l where l.post.postId = :post AND l.liked=true") 
 	Set<AppUser> findAllByPostId(@Param("post") Integer post);
 }
