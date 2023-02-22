@@ -78,6 +78,9 @@ public class AppUserService {
 
     private AppUserDTO mapToAppUserDTO(AppUser appUser, AppUserDTO appUserDTO) {
         appUserDTO.setUserId(appUser.getUserId());
+        appUserDTO.setFirstname(appUser.getProfile().getFirstname());
+        appUserDTO.setMiddlename(appUser.getProfile().getMiddlename());
+        appUserDTO.setLastname(appUser.getProfile().getLastname());
         appUserDTO.setUsername(appUser.getUsername());
         appUserDTO.setEmail(appUser.getEmail());
         appUserDTO.setIsActive(appUser.getIsActive());

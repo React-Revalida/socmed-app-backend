@@ -43,6 +43,12 @@ public class AppUserDTO {
 
     private Integer profile;
 
+    private String firstname;
+
+    private String middlename;
+
+    private String lastname;
+
     private String name;
 
     private String bio;
