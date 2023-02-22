@@ -81,6 +81,7 @@ public class AppUserService {
         appUserDTO.setFirstname(appUser.getProfile().getFirstname());
         appUserDTO.setMiddlename(appUser.getProfile().getMiddlename());
         appUserDTO.setLastname(appUser.getProfile().getLastname());
+        appUserDTO.setBirthdate(appUser.getProfile().getBirthdate());
         appUserDTO.setUsername(appUser.getUsername());
         appUserDTO.setEmail(appUser.getEmail());
         appUserDTO.setIsActive(appUser.getIsActive());
