@@ -40,7 +40,9 @@ public class PostsService {
 		Set<Posts> postsTbl = new HashSet<>();
 
 		for (Posts post : posts) {
-			postsTbl.add(post);
+			if (post.getDeleted() == false) {
+				postsTbl.add(post);
+			}
 		}
 
 		return mapToPostsTbl(postsTbl, new HashSet<>());
@@ -106,12 +108,14 @@ public class PostsService {
 	}
 
 	private PostsDTO mapToPostEntity(PostsDTO postDTO, Posts post) {
-		postDTO.setPostId(post.getPostId());
-		postDTO.setDeleted(post.getDeleted());
-		postDTO.setImageUrl(post.getImageUrl());
-		postDTO.setMessage(post.getMessage());
-		postDTO.setTimestamp(post.getTimestamp());
-		postDTO.setUser(post.getUser().getUserId());
+		if (post.getDeleted() == false) {
+			postDTO.setPostId(post.getPostId());
+			postDTO.setDeleted(post.getDeleted());
+			postDTO.setImageUrl(post.getImageUrl());
+			postDTO.setMessage(post.getMessage());
+			postDTO.setTimestamp(post.getTimestamp());
+			postDTO.setUser(post.getUser().getUserId());
+		}
 
 		return postDTO;
 	}
@@ -134,7 +138,6 @@ public class PostsService {
 
 	private Set<PostsDTO> mapToPostsTbl(Set<Posts> postsTbl, Set<PostsDTO> postsDTOTbl) {
 		for (Posts post : postsTbl) {
-			System.out.println(post.getMessage());
 			PostsDTO postsDTO = new PostsDTO();
 			postsDTO.setPostId(post.getPostId());
 			postsDTO.setMessage(post.getMessage());
