@@ -19,4 +19,7 @@ public interface FollowsRepository extends JpaRepository<Follows, Integer> {
     
     @Query("select f.follower.userId from Follows f where f.following.username = :username")
     Set<Integer> findFollowersByUsername(@Param("username") String username);
+    
+    @Query("select f from Follows f where f.follower.userId = :follower_id and f.following.userId = :following_id")
+    Follows findFollowerFollowingPair(@Param("follower_id") Integer followerId, @Param("following_id") Integer following_id);
 }
