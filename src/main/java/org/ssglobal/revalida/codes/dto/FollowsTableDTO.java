@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FollowsDTO {
+public class FollowsTableDTO {
 	
     private Integer userId;
 
