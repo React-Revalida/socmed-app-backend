@@ -3,6 +3,7 @@ package org.ssglobal.revalida.codes.service;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,34 +20,57 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class PostsService {
-	
-    @Value("${do.space.post-dir}")
-    private String postDir;
+
+	@Value("${do.space.post-dir}")
+	private String postDir;
 
 	private final PostsRepository postRepository;
 	private final AppUserRepository appUserRepository;
 	private final ImageService imageService;
 
-	public PostsService(PostsRepository postRepository, AppUserRepository appUserRepository, ImageService imageService) {
+	public PostsService(PostsRepository postRepository, AppUserRepository appUserRepository,
+			ImageService imageService) {
 		this.postRepository = postRepository;
 		this.appUserRepository = appUserRepository;
 		this.imageService = imageService;
 	}
 
+	public Set<PostsDTO> getAllPosts() {
+		List<Posts> posts = postRepository.findAll();
+		Set<Posts> postsTbl = new HashSet<>();
+
+		for (Posts post : posts) {
+			postsTbl.add(post);
+		}
+
+		return mapToPostsTbl(postsTbl, new HashSet<>());
+	}
+
+	public PostsDTO getPostById(Integer postId) {
+		Optional<Posts> confirmedPost = postRepository.findById(postId);
+		PostsDTO postDTO = new PostsDTO();
+		Posts post = new Posts();
+
+		if (confirmedPost.isPresent()) {
+			post = confirmedPost.get();
+		}
+
+		return mapToPostEntity(postDTO, post);
+	}
+
 	public Set<PostsDTO> getPostsByUsername(String username) {
 		Set<Integer> postIds = postRepository.findAllPostsIdByUsername(username);
 		Set<Posts> postsTbl = new HashSet<>();
-		System.out.println(postIds);
 
-		for(Integer postId: postIds) {
-    		Optional<Posts> userPost = postRepository.findById(postId);
-    		if (userPost.isPresent()) {
-    			postsTbl.add(userPost.get());
-    		}
+		for (Integer postId : postIds) {
+			Optional<Posts> userPost = postRepository.findById(postId);
+			if (userPost.isPresent()) {
+				postsTbl.add(userPost.get());
+			}
 		}
-		return mapToPostsTbl (postsTbl, new HashSet<>());
+		return mapToPostsTbl(postsTbl, new HashSet<>());
 	}
-	
+
 	@Transactional
 	public Boolean deletePostById(Integer id) {
 		Optional<Posts> post = postRepository.findById(id);
@@ -54,34 +78,45 @@ public class PostsService {
 			PostsDTO postDTO = new PostsDTO();
 			postDTO.setPostId(post.get().getPostId());
 			mapDeletedToPostEntity(postDTO, post.get());
-	        boolean deleted = postRepository.save(post.get()) != null;
-	        return deleted;
+			boolean deleted = postRepository.save(post.get()) != null;
+			return deleted;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Transactional
-	public Boolean createPost(final PostsDTO postDTO, final MultipartFile postImage, String username) 
+	public Boolean createPost(final PostsDTO postDTO, final MultipartFile postImage, String username)
 			throws IOException {
 		final Posts post = new Posts();
 		if (postImage != null) {
 			imageService.postUpload(postDir, postImage, post);
 		}
-		
+
 		Optional<AppUser> user = appUserRepository.findByUsername(username);
 		if (user.isPresent()) {
-			mapToPostEntity(postDTO, post, user.get());
+			mapCreatedToPostEntity(postDTO, post, user.get());
 			Posts newPost = postRepository.save(post);
 			if (newPost != null) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	private Posts mapToPostEntity(PostsDTO postDTO, Posts post, AppUser user) {
+
+	private PostsDTO mapToPostEntity(PostsDTO postDTO, Posts post) {
+		postDTO.setPostId(post.getPostId());
+		postDTO.setDeleted(post.getDeleted());
+		postDTO.setImageUrl(post.getImageUrl());
+		postDTO.setMessage(post.getMessage());
+		postDTO.setTimestamp(post.getTimestamp());
+		postDTO.setUser(post.getUser().getUserId());
+
+		return postDTO;
+	}
+
+	private Posts mapCreatedToPostEntity(PostsDTO postDTO, Posts post, AppUser user) {
 		post.setDeleted(false);
 		post.setImageUrl(post.getImageUrl());
 		post.setMessage(postDTO.getMessage());
@@ -90,15 +125,15 @@ public class PostsService {
 		post.setUser(user);
 		return post;
 	}
-	
+
 	private Posts mapDeletedToPostEntity(PostsDTO postDTO, Posts post) {
 		post.setPostId(postDTO.getPostId());
 		post.setDeleted(true);
 		return post;
 	}
-			
-	private Set<PostsDTO> mapToPostsTbl (Set<Posts> postsTbl, Set<PostsDTO> postsDTOTbl) {
-		for (Posts post: postsTbl) {
+
+	private Set<PostsDTO> mapToPostsTbl(Set<Posts> postsTbl, Set<PostsDTO> postsDTOTbl) {
+		for (Posts post : postsTbl) {
 			System.out.println(post.getMessage());
 			PostsDTO postsDTO = new PostsDTO();
 			postsDTO.setPostId(post.getPostId());
@@ -109,7 +144,7 @@ public class PostsService {
 			postsDTO.setUser(post.getUser().getUserId());
 			postsDTOTbl.add(postsDTO);
 		}
-		
+
 		return postsDTOTbl;
 	}
 }

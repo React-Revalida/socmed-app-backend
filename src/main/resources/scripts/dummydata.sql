@@ -77,12 +77,12 @@ insert into app_user(date_created, email, last_updated, password, username, prof
 
 -- Posts --
 
-insert into posts(image_url, message, user_id) values 
-('https://media.istockphoto.com/id/1388524172/photo/asian-child-playing-at-park.jpg?b=1&s=170667a&w=0&k=20&c=-1MKEPIA7opxNO8M9V5fSjqSUuhwAFW8EEnTm5pFAt4=', 'My Child Playing', 10006 ),
-('https://media.istockphoto.com/id/1356452059/photo/cafe.jpg?b=1&s=170667a&w=0&k=20&c=xGhOvg9rozwP_upBoaoNYuY0RIz8M3dUe1Tt9gAajWY=', 'Good morning to all', 10004),
-('https://media.istockphoto.com/id/1340716614/photo/abstract-icon-representing-the-ecological-call-to-recycle-and-reuse-in-the-form-of-a-pond.jpg?s=612x612&w=0&k=20&c=CglVAOWBC02qDc6Wa2ltd1L-lBVPTaYahFDEXJa4ido=', 'Let us save earth', 10007),
-('https://media.istockphoto.com/id/1206622213/photo/mother-father-children-son-and-daughter-runing-and-jumping-on-sunset.jpg?s=612x612&w=0&k=20&c=_cpcCvDBTGUvuQM6A9eboTirh45wubZt2Uhd0t9ylWc=', 'Happy Family', 10006),
-('https://media.istockphoto.com/id/1257922267/vector/illustration-of-the-concept-of-sustainability-corporate-social-responsibility-or.jpg?s=612x612&w=0&k=20&c=VmIWFMbKy_9egmL2NbxPU4_8Ly3I75e7sW5Kn9o3bbs=', 'My First Web App', 10005);
+insert into posts(deleted, image_url, message, user_id) values 
+(false, 'https://media.istockphoto.com/id/1388524172/photo/asian-child-playing-at-park.jpg?b=1&s=170667a&w=0&k=20&c=-1MKEPIA7opxNO8M9V5fSjqSUuhwAFW8EEnTm5pFAt4=', 'My Child Playing', 10006 ),
+(false, 'https://media.istockphoto.com/id/1356452059/photo/cafe.jpg?b=1&s=170667a&w=0&k=20&c=xGhOvg9rozwP_upBoaoNYuY0RIz8M3dUe1Tt9gAajWY=', 'Good morning to all', 10004),
+(false, 'https://media.istockphoto.com/id/1340716614/photo/abstract-icon-representing-the-ecological-call-to-recycle-and-reuse-in-the-form-of-a-pond.jpg?s=612x612&w=0&k=20&c=CglVAOWBC02qDc6Wa2ltd1L-lBVPTaYahFDEXJa4ido=', 'Let us save earth', 10007),
+(false, 'https://media.istockphoto.com/id/1206622213/photo/mother-father-children-son-and-daughter-runing-and-jumping-on-sunset.jpg?s=612x612&w=0&k=20&c=_cpcCvDBTGUvuQM6A9eboTirh45wubZt2Uhd0t9ylWc=', 'Happy Family', 10006),
+(false, 'https://media.istockphoto.com/id/1257922267/vector/illustration-of-the-concept-of-sustainability-corporate-social-responsibility-or.jpg?s=612x612&w=0&k=20&c=VmIWFMbKy_9egmL2NbxPU4_8Ly3I75e7sW5Kn9o3bbs=', 'My First Web App', 10005);
 
 -- Comments --
 
