@@ -18,7 +18,7 @@ public class CommentsDTO {
 
     private String timestamp;
 
-    private Integer user;
+    private AppUserDTO user;
 
     private Integer post;
 

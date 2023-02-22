@@ -25,8 +25,8 @@ public class LikesService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LikesService.class);
     private final AppUserRepository appUserRepository;
-    private final LikesRepository likesRepository;
     private final PostsRepository postsRepository;
+    private final LikesRepository likesRepository;
     
 	public LikesService(AppUserRepository appUserRepository, LikesRepository likesRepository, PostsRepository postsRepository) {
 		this.appUserRepository = appUserRepository;
