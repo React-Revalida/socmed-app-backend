@@ -3,6 +3,7 @@ package org.ssglobal.revalida.codes.service;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -84,6 +85,12 @@ public class CommentsService {
 		return false;
 	} 
     
+	public Boolean deleteComment(Integer commentId) 
+			throws IOException {
+		commentsRepository.deleteById(commentId);
+		return true;
+	}
+	
 	private Comments mapPostUserToCommentsTbl (Comments comment, CommentsDTO commentsDTO, Posts post, AppUser user) {
 		comment.setId(commentsDTO.getId());
 		comment.setMessage(commentsDTO.getMessage());

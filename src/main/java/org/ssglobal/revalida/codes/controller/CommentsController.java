@@ -55,4 +55,11 @@ public class CommentsController {
 		Boolean added = commentsService.createComment(commentsDTO);
 		return new ResponseEntity<>(added, null, HttpStatus.SC_OK);
 	}
+	
+	@PostMapping("/comment/delete/{commentId}")
+	public ResponseEntity<Boolean> deleteComment(@PathVariable Integer commentId) throws IOException {
+		Boolean deleted = commentsService.deleteComment(commentId);
+		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
+	}
+	
 }
