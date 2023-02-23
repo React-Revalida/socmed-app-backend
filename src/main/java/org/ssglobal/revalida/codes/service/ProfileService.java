@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.dto.AddressDTO;
+import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.ProfileDTO;
 import org.ssglobal.revalida.codes.model.Address;
 import org.ssglobal.revalida.codes.model.Profile;
@@ -20,6 +21,7 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
     private final AddressRepository addressRepository;
+    private final AppUserService appUserService;
 
     private final ImageService imageService;
 
@@ -27,14 +29,15 @@ public class ProfileService {
     private String profileDir;
 
     public ProfileService(ProfileRepository profileRepository, AddressRepository addressRepository,
-            ImageService imageService) {
+            ImageService imageService, AppUserService appUserService) {
         this.profileRepository = profileRepository;
         this.addressRepository = addressRepository;
         this.imageService = imageService;
+        this.appUserService = appUserService;
     }
 
     @Transactional
-    public boolean updateProfile(String username, ProfileDTO profileDTO, final MultipartFile profilePicture)
+    public AppUserDTO updateProfile(String username, ProfileDTO profileDTO, final MultipartFile profilePicture)
             throws IOException {
         Profile profile = profileRepository.findByProfile_Username(username);
         if (profile == null) {
@@ -45,11 +48,14 @@ public class ProfileService {
         }
         mapToProfileEntity(profileDTO, profile);
         boolean isUpdated = profileRepository.save(profile) != null;
-        return isUpdated;
+        if (isUpdated) {
+            return appUserService.findByUsername(username);
+        }
+        return null;
     }
 
     @Transactional
-    public boolean updateOrAddAddress(String username, AddressDTO addressDTO) {
+    public AppUserDTO updateOrAddAddress(String username, AddressDTO addressDTO) {
         Address address = addressRepository.findByAddress_Profile_Username(username);
         if (address == null) {
             address = new Address();
@@ -61,13 +67,16 @@ public class ProfileService {
             profile.setAddress(address);
             boolean isUpdated = addressRepository.save(address) != null;
             if (isUpdated) {
-                profileRepository.save(profile);
+                return appUserService.findByUsername(username);
             }
-            return isUpdated;
+            return null;
         }
         mapToAddressEntity(addressDTO, address);
         boolean isUpdated = addressRepository.save(address) != null;
-        return isUpdated;
+        if (isUpdated) {
+            return appUserService.findByUsername(username);
+        }
+        return null;
     }
 
     private Profile mapToProfileEntity(ProfileDTO profileDTO, Profile profile) {
