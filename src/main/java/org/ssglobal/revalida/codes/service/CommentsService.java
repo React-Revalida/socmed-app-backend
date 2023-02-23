@@ -1,5 +1,6 @@
 package org.ssglobal.revalida.codes.service;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
@@ -11,12 +12,16 @@ import org.springframework.stereotype.Service;
 import org.ssglobal.revalida.codes.dto.AddressDTO;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.CommentsDTO;
-import org.ssglobal.revalida.codes.dto.FollowsDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Comments;
+import org.ssglobal.revalida.codes.model.Likes;
+import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
 import org.ssglobal.revalida.codes.repos.CommentsRepository;
 import org.ssglobal.revalida.codes.repos.PostsRepository;
+
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service
 public class CommentsService {
@@ -52,6 +57,8 @@ public class CommentsService {
         return commentsTblDTO;
     }
 	
+	
+	
 	private AppUserDTO mapToAppUserDTO(AppUser appUser) {
 		if (appUser != null) {
 			AppUserDTO appUserDTO = new AppUserDTO();
@@ -61,8 +68,33 @@ public class CommentsService {
         }
         return null;
 	}
+
+//	@Transactional
+	public Boolean createComment(@Valid CommentsDTO commentsDTO)
+			throws IOException {
+		final Comments comment = new Comments();
+		Optional<Posts> post = postsRepository.findById(commentsDTO.getPost());
+		Optional<AppUser> user = appUserRepository.findById(commentsDTO.getUser().getUserId());
+		if (user.isPresent()) { 
+			mapPostUserToCommentsTbl(comment,commentsDTO, post.get(), user.get());
+			Comments newComment = commentsRepository.save(comment);
+			if (newComment != null) {
+				return true;
+			}
+		}
+
+		return false;
+	} 
     
-    
+	private Comments mapPostUserToCommentsTbl (Comments comment, CommentsDTO commentsDTO, Posts post, AppUser user) {
+		comment.setId(commentsDTO.getId());
+		comment.setMessage(commentsDTO.getMessage());
+		comment.setTimestamp(commentsDTO.getTimestamp());
+		comment.setPost(post);
+		comment.setUser(user);
+	
+		return comment;
+	}
 	
 	
 }
