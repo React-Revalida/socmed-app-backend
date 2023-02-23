@@ -22,6 +22,6 @@ public class PostsDTO {
 
     private Boolean deleted;
 
-    private Integer user;
+    private AppUserDTO user;
 
 }

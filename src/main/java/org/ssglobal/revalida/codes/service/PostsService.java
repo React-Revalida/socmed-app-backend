@@ -10,11 +10,13 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
 import org.ssglobal.revalida.codes.repos.PostsRepository;
+import org.ssglobal.revalida.codes.repos.ProfileRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -33,6 +35,7 @@ public class PostsService {
 		this.postRepository = postRepository;
 		this.appUserRepository = appUserRepository;
 		this.imageService = imageService;
+
 	}
 
 	public Set<PostsDTO> getAllPosts() {
@@ -40,11 +43,9 @@ public class PostsService {
 		Set<Posts> postsTbl = new HashSet<>();
 
 		for (Posts post : posts) {
-			if (post.getDeleted() == false) {
-				postsTbl.add(post);
-			}
+			postsTbl.add(post);
 		}
-
+		
 		return mapToPostsTbl(postsTbl, new HashSet<>());
 	}
 
@@ -109,12 +110,17 @@ public class PostsService {
 
 	private PostsDTO mapToPostEntity(PostsDTO postDTO, Posts post) {
 		if (post.getDeleted() == false) {
-			postDTO.setPostId(post.getPostId());
-			postDTO.setDeleted(post.getDeleted());
-			postDTO.setImageUrl(post.getImageUrl());
-			postDTO.setMessage(post.getMessage());
-			postDTO.setTimestamp(post.getTimestamp());
-			postDTO.setUser(post.getUser().getUserId());
+			Optional<AppUser> appUserPost = appUserRepository.findById(post.getUser().getUserId());
+			if (appUserPost.isPresent()) {
+				post.setUser(appUserPost.get());
+				postDTO.setPostId(post.getPostId());
+				postDTO.setDeleted(post.getDeleted());
+				postDTO.setImageUrl(post.getImageUrl());
+				postDTO.setMessage(post.getMessage());
+				postDTO.setTimestamp(post.getTimestamp());
+				postDTO.setUser(mapToAppUserDTO(
+						appUserRepository.findByUsernameIgnoreCase(post.getUser().getUsername()), new AppUserDTO()));
+			}
 		}
 
 		return postDTO;
@@ -138,16 +144,38 @@ public class PostsService {
 
 	private Set<PostsDTO> mapToPostsTbl(Set<Posts> postsTbl, Set<PostsDTO> postsDTOTbl) {
 		for (Posts post : postsTbl) {
-			PostsDTO postsDTO = new PostsDTO();
-			postsDTO.setPostId(post.getPostId());
-			postsDTO.setMessage(post.getMessage());
-			postsDTO.setImageUrl(post.getImageUrl());
-			postsDTO.setTimestamp(post.getTimestamp());
-			postsDTO.setDeleted(post.getDeleted());
-			postsDTO.setUser(post.getUser().getUserId());
-			postsDTOTbl.add(postsDTO);
+			if (post.getDeleted() == false) {
+				PostsDTO postsDTO = new PostsDTO();
+				Optional<AppUser> appUserPost = appUserRepository.findById(post.getUser().getUserId());
+				if (appUserPost.isPresent()) {
+					post.setUser(appUserPost.get());
+					postsDTO.setPostId(post.getPostId());
+					postsDTO.setMessage(post.getMessage());
+					postsDTO.setImageUrl(post.getImageUrl());
+					postsDTO.setTimestamp(post.getTimestamp());
+					postsDTO.setDeleted(post.getDeleted());
+					postsDTO.setUser(
+							mapToAppUserDTO(appUserRepository.findByUsernameIgnoreCase(post.getUser().getUsername()),
+									new AppUserDTO()));
+					postsDTOTbl.add(postsDTO);
+				}
+			}
 		}
-
 		return postsDTOTbl;
+	}
+
+	private AppUserDTO mapToAppUserDTO(AppUser appUser, AppUserDTO appUserDTO) {
+		appUserDTO.setUserId(appUser.getUserId());
+		appUserDTO.setFirstname(appUser.getProfile().getFirstname());
+		appUserDTO.setMiddlename(appUser.getProfile().getMiddlename());
+		appUserDTO.setLastname(appUser.getProfile().getLastname());
+		appUserDTO.setUsername(appUser.getUsername());
+		appUserDTO.setEmail(appUser.getEmail());
+		appUserDTO.setIsActive(appUser.getIsActive());
+		appUserDTO.setIsValidated(appUser.getIsValidated());
+		appUserDTO.setProfile(appUser.getProfile().getProfileId());
+		appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
+		return appUserDTO;
+
 	}
 }
