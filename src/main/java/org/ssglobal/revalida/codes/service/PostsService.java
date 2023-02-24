@@ -151,7 +151,7 @@ public class PostsService {
 					post.setUser(appUserPost.get());
 					postsDTO.setPostId(post.getPostId());
 					postsDTO.setMessage(post.getMessage());
-					postsDTO.setImageUrl(post.getImageUrl());
+					postsDTO.setImageUrl(imageService.getImageUrl(post.getImageUrl()));
 					postsDTO.setTimestamp(post.getTimestamp());
 					postsDTO.setDeleted(post.getDeleted());
 					postsDTO.setUser(
