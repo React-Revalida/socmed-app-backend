@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.FollowsTableDTO;
 import org.ssglobal.revalida.codes.service.FollowsService;
 
@@ -63,4 +64,12 @@ public class FollowsController {
 		return new ResponseEntity<>(unfollowed, null, HttpStatus.SC_OK);
 	}
 
+	@PostMapping("/mutually-followed")
+	public ResponseEntity<Set<AppUserDTO>> mutualFollow(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
+		String jwtToken = token.replace("Bearer ", "");
+		Jwt jwt = jwtDecoder.decode(jwtToken);
+		String user = jwt.getClaim("user");
+		Set<AppUserDTO> mutual = followsService.getMutualFollows(user);
+		return new ResponseEntity<>(mutual, null, HttpStatus.SC_OK);
+	}
 }
