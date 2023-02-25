@@ -63,14 +63,15 @@ public class PostsController {
 	}
 
 	@PostMapping("/posts")
-	public ResponseEntity<Boolean> addPost(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
+	public Set<PostsDTO> addPost(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
 			@RequestPart("post") @Valid final PostsDTO postDTO, @RequestPart("image") MultipartFile postImg)
 			throws IOException {
 		String jwtToken = token.replace("Bearer ", "");
 		Jwt jwt = jwtDecoder.decode(jwtToken);
 		String user = jwt.getClaim("user");
-		Boolean deleted = postsService.createPost(postDTO, postImg, user);
-		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
+//		Boolean deleted = postsService.createPost(postDTO, postImg, user);
+//		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
+		return postsService.createPost(postDTO, postImg, user);
 	}
 
 }
