@@ -20,6 +20,8 @@ public class FollowsTableDTO {
     @Size(max = 20)
     private String username;
     
+    private String name;
+    
     private String profilePic;
 
 }

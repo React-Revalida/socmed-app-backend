@@ -135,6 +135,7 @@ public class FollowsService {
 			FollowsTableDTO followsDTO = new FollowsTableDTO();
 			followsDTO.setUsername(user.getUsername());
 			followsDTO.setUserId(user.getUserId());
+			followsDTO.setName(String.join(" ", user.getProfile().getFirstname(), user.getProfile().getLastname()));
 			followsDTO.setProfilePic(user.getProfile().getProfilePic());
 			followingDTOTbl.add(followsDTO);
 		}
