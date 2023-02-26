@@ -1,5 +1,7 @@
 package org.ssglobal.revalida.codes.dto;
 
+import java.util.Set;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -23,5 +25,9 @@ public class PostsDTO {
     private Boolean deleted;
 
     private AppUserDTO user;
+    
+    private Set<AppUserDTO> likes;
+    
+    private Set<CommentsDTO> comments;
 
 }

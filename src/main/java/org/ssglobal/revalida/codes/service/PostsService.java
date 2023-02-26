@@ -29,12 +29,17 @@ public class PostsService {
 	private final PostsRepository postRepository;
 	private final AppUserRepository appUserRepository;
 	private final ImageService imageService;
+	private final LikesService likesService;
+	private final CommentsService commentsService;
+
 
 	public PostsService(PostsRepository postRepository, AppUserRepository appUserRepository,
-			ImageService imageService) {
+			ImageService imageService, LikesService likesService, CommentsService commentsService) {
 		this.postRepository = postRepository;
 		this.appUserRepository = appUserRepository;
 		this.imageService = imageService;
+		this.likesService = likesService;
+		this.commentsService = commentsService;
 
 	}
 
@@ -157,8 +162,10 @@ public class PostsService {
 					postsDTO.setUser(
 							mapToAppUserDTO(appUserRepository.findByUsernameIgnoreCase(post.getUser().getUsername()),
 									new AppUserDTO()));
-					postsDTOTbl.add(postsDTO);
 				}
+				postsDTO.setLikes(likesService.getUsersLikesByPostId(post.getPostId()));
+				postsDTO.setComments(commentsService.getComments(post.getPostId()));
+				postsDTOTbl.add(postsDTO);
 			}
 		}
 		return postsDTOTbl;
