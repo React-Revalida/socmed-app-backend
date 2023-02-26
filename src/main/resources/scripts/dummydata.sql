@@ -1,6 +1,8 @@
 -- To reset the sequence and delete the data from tables
 
 --/*
+\encoding utf-8
+
 alter sequence address_sequence restart;
 alter sequence profile_sequence restart;
 alter sequence user_sequence restart;

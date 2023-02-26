@@ -89,7 +89,7 @@ public class PostsService {
 	}
 
 	@Transactional
-	public Boolean createPost(final PostsDTO postDTO, final MultipartFile postImage, String username)
+	public Set<PostsDTO> createPost(final PostsDTO postDTO, final MultipartFile postImage, String username)
 			throws IOException {
 		final Posts post = new Posts();
 		if (postImage != null) {
@@ -101,11 +101,11 @@ public class PostsService {
 			mapCreatedToPostEntity(postDTO, post, user.get());
 			Posts newPost = postRepository.save(post);
 			if (newPost != null) {
-				return true;
+				return getAllPosts();
 			}
 		}
 
-		return false;
+		return new HashSet<>();
 	}
 
 	private PostsDTO mapToPostEntity(PostsDTO postDTO, Posts post) {
@@ -115,7 +115,7 @@ public class PostsService {
 				post.setUser(appUserPost.get());
 				postDTO.setPostId(post.getPostId());
 				postDTO.setDeleted(post.getDeleted());
-				postDTO.setImageUrl(post.getImageUrl());
+				postDTO.setImageUrl(imageService.getImageUrl(post.getImageUrl()));
 				postDTO.setMessage(post.getMessage());
 				postDTO.setTimestamp(post.getTimestamp());
 				postDTO.setUser(mapToAppUserDTO(
