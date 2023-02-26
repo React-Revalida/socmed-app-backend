@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.micrometer.common.lang.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,8 +38,6 @@ public class ProfileDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
-    @Size(min = 11, max = 11, message = "contact number must be 11 digits")
-    @Pattern(regexp = "^(09)\\d{9}$", message = "contact number must start with 09 and must be 11 digits")
     private String phone;
 
     @Size(max = 160)
