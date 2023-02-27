@@ -14,3 +14,4 @@ public class LikesDTO {
     private Integer post;
 
 }
+ 

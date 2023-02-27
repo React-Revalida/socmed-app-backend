@@ -8,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.LikesDTO;
@@ -87,13 +88,13 @@ public class LikesService {
 		
 		return false;
 	}
-	
-	public Boolean unlikePost(Integer likesId) 
+	@Transactional
+	public Boolean unlikePost(Integer postId, Integer userId) 
 			throws IOException {
-		likesRepository.deleteById(likesId);
+		likesRepository.deleteLikeRecord(postId, userId);
 		return true;
 	}
-	
+	 
 
 	private Likes mapPostUserToLikesTbl (Likes likes, LikesDTO likesDTO, Posts post, AppUser user) {
 			likes.setId(likesDTO.getId());

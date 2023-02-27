@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.ssglobal.revalida.codes.model.AppUser;
@@ -13,4 +14,11 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
 
     @Query("select l.user from Likes l where l.post.postId = :post AND l.liked=true") 
 	Set<AppUser> findAllByPostId(@Param("post") Integer post);
+    
+    @Modifying
+    @Query("delete from Likes l where l.post.postId = :post AND l.user.userId= :user") 
+	void deleteLikeRecord(@Param("post") Integer post, @Param("user")Integer user);
+    
+    
+    
 }
