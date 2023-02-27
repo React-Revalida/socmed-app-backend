@@ -36,7 +36,7 @@ public class LikesController {
 		Set<AppUserDTO> likesDTOTbl = likesService.getUsersLikesByPostId(post);
 		return new ResponseEntity<>(likesDTOTbl, null, HttpStatus.SC_OK);
 	}
-	
+	 
 	@PostMapping("/post")
 	public ResponseEntity<Boolean> likePost(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token, 
 			@RequestPart("like") @Valid final LikesDTO likesDTO) throws IOException {
@@ -44,9 +44,9 @@ public class LikesController {
 		return new ResponseEntity<>(liked, null, HttpStatus.SC_OK);
 	}
 	
-	@PostMapping("/unlike/{likeId}")
-	public ResponseEntity<Boolean> unlikePost(@PathVariable Integer likeId) throws IOException {
-		Boolean unliked = likesService.unlikePost(likeId);
+	@PostMapping("/unlike/{postId}/{userId}")
+	public ResponseEntity<Boolean> unlikePost(@PathVariable Integer postId, @PathVariable Integer userId) throws IOException {
+		Boolean unliked = likesService.unlikePost(postId, userId);
 		return new ResponseEntity<>(unliked, null, HttpStatus.SC_OK);
 	}
 	
