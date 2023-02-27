@@ -136,7 +136,7 @@ public class FollowsService {
 			followsDTO.setUsername(user.getUsername());
 			followsDTO.setUserId(user.getUserId());
 			followsDTO.setName(String.join(" ", user.getProfile().getFirstname(), user.getProfile().getLastname()));
-			followsDTO.setProfilePic(user.getProfile().getProfilePic());
+			followsDTO.setProfilePic(imageService.getImageUrl(user.getProfile().getProfilePic()));
 			followingDTOTbl.add(followsDTO);
 		}
 		
