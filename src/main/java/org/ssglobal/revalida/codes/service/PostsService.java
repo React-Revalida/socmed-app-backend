@@ -125,6 +125,8 @@ public class PostsService {
 				postDTO.setTimestamp(post.getTimestamp());
 				postDTO.setUser(mapToAppUserDTO(
 						appUserRepository.findByUsernameIgnoreCase(post.getUser().getUsername()), new AppUserDTO()));
+				postDTO.setLikes(likesService.getUsersLikesByPostId(post.getPostId()));
+				postDTO.setComments(commentsService.getComments(post.getPostId()));
 			}
 		}
 
