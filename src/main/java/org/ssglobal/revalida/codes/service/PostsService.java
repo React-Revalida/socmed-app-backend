@@ -32,7 +32,7 @@ public class PostsService {
 
 	private final PostsRepository postRepository;
 	private final AppUserRepository appUserRepository;
-	private final ImageService imageService;
+	private final ImageService imageService;	
 	private final LikesService likesService;
 	private final CommentsService commentsService;
 
@@ -83,17 +83,18 @@ public class PostsService {
 	}
 
 	@Transactional
-	public Boolean deletePostById(Integer id) {
+	public Set<PostsDTO> deletePostById(Integer id) {
 		Optional<Posts> post = postRepository.findById(id);
 		if (post.isPresent()) {
 			PostsDTO postDTO = new PostsDTO();
 			postDTO.setPostId(post.get().getPostId());
 			mapDeletedToPostEntity(postDTO, post.get());
 			boolean deleted = postRepository.save(post.get()) != null;
-			return deleted;
+			if (deleted) {
+				return getPostsByUsername(post.get().getUser().getUsername());
+			}	
 		}
-
-		return false;
+		return new HashSet<>();
 	}
 
 	@Transactional

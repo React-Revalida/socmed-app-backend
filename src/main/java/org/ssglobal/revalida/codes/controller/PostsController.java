@@ -49,7 +49,7 @@ public class PostsController {
 		return new ResponseEntity<>(postsDTOTbl, null, HttpStatus.SC_OK);
 	}
 
-	@GetMapping("/post/{postId}")
+	@GetMapping("/posts/{postId}")
 	public ResponseEntity<PostsDTO> getPostById(@PathVariable Integer postId) {
 		PostsDTO post = postsService.getPostById(postId);
 		return new ResponseEntity<>(post, null, HttpStatus.SC_OK);
@@ -57,9 +57,10 @@ public class PostsController {
 
 
 	@PostMapping("/posts/delete/{id}")
-	public ResponseEntity<Boolean> deletePost(@PathVariable Integer id) {
-		Boolean deleted = postsService.deletePostById(id);
-		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
+	public Set<PostsDTO> deletePost(@PathVariable Integer id) {
+//		Boolean deleted = postsService.deletePostById(id);
+//		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
+		return postsService.deletePostById(id);
 	}
 
 	@PostMapping("/posts")
