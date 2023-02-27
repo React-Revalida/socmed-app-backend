@@ -2,21 +2,25 @@ package org.ssglobal.revalida.codes.service;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.ssglobal.revalida.codes.comparator.TimestampComparator;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
 import org.ssglobal.revalida.codes.repos.PostsRepository;
-import org.ssglobal.revalida.codes.repos.ProfileRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -32,9 +36,8 @@ public class PostsService {
 	private final LikesService likesService;
 	private final CommentsService commentsService;
 
-
-	public PostsService(PostsRepository postRepository, AppUserRepository appUserRepository,
-			ImageService imageService, LikesService likesService, CommentsService commentsService) {
+	public PostsService(PostsRepository postRepository, AppUserRepository appUserRepository, ImageService imageService,
+			LikesService likesService, CommentsService commentsService) {
 		this.postRepository = postRepository;
 		this.appUserRepository = appUserRepository;
 		this.imageService = imageService;
@@ -50,7 +53,7 @@ public class PostsService {
 		for (Posts post : posts) {
 			postsTbl.add(post);
 		}
-		
+
 		return mapToPostsTbl(postsTbl, new HashSet<>());
 	}
 
@@ -164,13 +167,14 @@ public class PostsService {
 					postsDTO.setUser(
 							mapToAppUserDTO(appUserRepository.findByUsernameIgnoreCase(post.getUser().getUsername()),
 									new AppUserDTO()));
+					postsDTO.setLikes(likesService.getUsersLikesByPostId(post.getPostId()));
+					postsDTO.setComments(commentsService.getComments(post.getPostId()));
+					postsDTOTbl.add(postsDTO);
+
 				}
-				postsDTO.setLikes(likesService.getUsersLikesByPostId(post.getPostId()));
-				postsDTO.setComments(commentsService.getComments(post.getPostId()));
-				postsDTOTbl.add(postsDTO);
 			}
 		}
-		return postsDTOTbl;
+		return sortByTimestamp(postsDTOTbl);
 	}
 
 	private AppUserDTO mapToAppUserDTO(AppUser appUser, AppUserDTO appUserDTO) {
@@ -185,6 +189,11 @@ public class PostsService {
 		appUserDTO.setProfile(appUser.getProfile().getProfileId());
 		appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
 		return appUserDTO;
+	}
 
+	private Set<PostsDTO> sortByTimestamp(Set<PostsDTO> postsDTOTbl) {
+		List<PostsDTO> list = new ArrayList<>(postsDTOTbl);
+		List<PostsDTO> sortedlist = list.stream().sorted(new TimestampComparator()).collect(Collectors.toList());
+		return new LinkedHashSet<PostsDTO>(sortedlist);
 	}
 }
