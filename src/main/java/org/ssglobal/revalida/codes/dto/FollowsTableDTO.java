@@ -23,5 +23,5 @@ public class FollowsTableDTO {
     private String name;
     
     private String profilePic;
-
+    
 }

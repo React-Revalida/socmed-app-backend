@@ -72,4 +72,13 @@ public class FollowsController {
 		Set<AppUserDTO> mutual = followsService.getMutualFollows(user);
 		return new ResponseEntity<>(mutual, null, HttpStatus.SC_OK);
 	}
+	
+	@GetMapping("/who-to-follow")
+	public ResponseEntity<Set<FollowsTableDTO>> getWhoToFollow(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
+		String jwtToken = token.replace("Bearer ", "");
+		Jwt jwt = jwtDecoder.decode(jwtToken);
+		String user = jwt.getClaim("user");
+		Set<FollowsTableDTO> followsDTOTbl = followsService.getWhoToFollow(user);
+		return new ResponseEntity<>(followsDTOTbl, null, HttpStatus.SC_OK);
+	}
 }

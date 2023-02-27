@@ -1,7 +1,10 @@
 package org.ssglobal.revalida.codes.service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,6 +59,31 @@ public class FollowsService {
     	}
     	
     	return maptoUserFollowingTbl(followingTbl, new HashSet<>());
+    }
+    
+    public Set<FollowsTableDTO> getWhoToFollow(String username) {
+    	Set<Integer> ids = followsRepository.findFollowingByUsername(username);
+    	List<AppUser> allUsers = appUserRepository.findAll();
+    	Set<AppUser> whoToFollowTbl = new HashSet<>();
+    	Map<String, Integer> userFollowersMap = new HashMap<>(); 
+    	for (AppUser user: allUsers) {
+    		if (!(ids.contains(user.getUserId())) && !(user.getUsername().equalsIgnoreCase(username))) {
+    			Integer followers = followsRepository.countFollowersByUserUsername(user.getUsername());
+    			userFollowersMap.put(user.getUsername(), followers);
+    		}
+    	}
+    	
+    	List<String> highestFollowers = userFollowersMap.entrySet().stream()
+    			.sorted(Map.Entry.<String, Integer>comparingByValue()
+    			.reversed()).limit(3).map(Map.Entry::getKey)
+    			.collect(Collectors.toList());
+    	
+    	for (String name: highestFollowers) {
+    		AppUser u = appUserRepository.findByUsernameIgnoreCase(name);
+    		whoToFollowTbl.add(u);
+    	}
+    	
+    	return maptoUserFollowingTbl(whoToFollowTbl, new HashSet<>());
     }
     
     @Transactional
