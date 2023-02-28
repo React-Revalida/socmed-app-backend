@@ -2,8 +2,7 @@ package org.ssglobal.revalida.codes.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -86,11 +85,11 @@ public class AppUserController {
     }
     
     @GetMapping("/all")
-    public ResponseEntity<List<String>> getAllUsers(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<Map<String, String>> getAllUsers(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         String jwtToken = token.replace("Bearer ", "");
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");
-        List<String> namesTbl = appUserService.findAllUsers();
+        Map<String, String> namesTbl = appUserService.findAllUsers();
         return new ResponseEntity<>(namesTbl, HttpStatus.OK);
     }
 

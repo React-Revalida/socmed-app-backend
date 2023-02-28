@@ -2,8 +2,9 @@ package org.ssglobal.revalida.codes.service;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,21 +78,23 @@ public class AppUserService {
         return mapToAppUserDTO(appUser, new AppUserDTO());
     }
     
-    public List<String> findAllUsers() {
-    	List<String> names = new ArrayList<>();
+    public Map<String, String> findAllUsers() {
+    	Map<String, String> names = new HashMap<>();
     	List<AppUser> appUserTbl = appUserRepository.findAll();
     	return mapNamesToTbl(appUserTbl, names);
     }
     
-    private List<String> mapNamesToTbl(List<AppUser> appUserTbl, List<String> names) {
+    private Map<String, String> mapNamesToTbl(List<AppUser> appUserTbl, Map<String, String> names) {
     	for (AppUser user: appUserTbl) {
     		if (!(user.getProfile().getMiddlename() == null)) {
-    			names.add(String.join(" ", user.getProfile().getFirstname(), 
-    					user.getProfile().getMiddlename(), 
-    					user.getProfile().getLastname()));
+    			names.put(user.getUsername(), 
+    					String.join(" ", user.getProfile().getFirstname(), 
+    							user.getProfile().getMiddlename(), 
+    							user.getProfile().getLastname()));
     		} else {
-    			names.add(String.join(" ", user.getProfile().getFirstname(), 
-    					user.getProfile().getLastname()));
+    			names.put(user.getUsername(), 
+    					String.join(" ", user.getProfile().getFirstname(), 
+    							user.getProfile().getLastname()));
     		}
     	}
     	
