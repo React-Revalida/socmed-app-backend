@@ -100,17 +100,14 @@ public class PostsService {
 	@Transactional
 	public Set<PostsDTO> editPostById(Integer id, final MultipartFile postImage, final PostsDTO editedPost)
 			throws IOException {
-		System.out.println(postImage.getSize() != 0);
-		Posts newImage = new Posts();
-		if (postImage.getSize() != 0) {
-			imageService.postUpload(postDir, postImage, newImage);
-		} else {
-			newImage = null;
-		}
 
 		Optional<Posts> post = postRepository.findById(id);
+		if (postImage != null) {
+			imageService.postUpdate(postDir, postImage, post.get());
+		} 
+
 		if (post.isPresent()) {
-			mapEditedToPostEntity(editedPost, post.get(), newImage);
+			mapEditedToPostEntity(editedPost, post.get());
 			boolean isEdited = postRepository.save(post.get()) != null;
 			if (isEdited) {
 				return getPostsByUsername(post.get().getUser().getUsername());
@@ -169,10 +166,7 @@ public class PostsService {
 		return post;
 	}
 
-	private Posts mapEditedToPostEntity(PostsDTO postDTO, Posts post, Posts newImage) {
-		if (newImage != null) {
-			post.setImageUrl(newImage.getImageUrl());
-		}
+	private Posts mapEditedToPostEntity(PostsDTO postDTO, Posts post) {
 		post.setMessage(postDTO.getMessage());
 		post.setTimestamp(new Timestamp(System.currentTimeMillis()).toString());
 		return post;

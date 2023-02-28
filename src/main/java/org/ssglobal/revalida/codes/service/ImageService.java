@@ -72,7 +72,21 @@ public class ImageService {
         imgName = "post" + "_" + System.currentTimeMillis();
         String key = directory2Upload + imgName + "." + extension;
         saveImageToServer(multipartFile, key);
-        post.setImageUrl(key);;
+        post.setImageUrl(key);
+        return post;
+    }
+    
+    public Posts postUpdate(String directory2Upload, MultipartFile multipartFile, Posts post)
+            throws IOException {
+        if (multipartFile.isEmpty()) {
+            return post;
+        }
+        String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+        String imgName = FilenameUtils.removeExtension(multipartFile.getOriginalFilename());
+        imgName = "profile" + "_" + System.currentTimeMillis();
+        String key = directory2Upload + imgName + "." + extension;
+        updateImageToServer(multipartFile, key, post.getImageUrl());
+        post.setImageUrl(key);
         return post;
     }
 
