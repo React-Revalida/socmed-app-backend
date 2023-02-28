@@ -63,6 +63,7 @@ public class CommentsService {
 			AppUserDTO appUserDTO = new AppUserDTO();
 			appUserDTO.setUserId(appUser.getUserId());
 			appUserDTO.setUsername(appUser.getUsername());
+			appUserDTO.setName(String.join(" ", appUser.getProfile().getFirstname(), appUser.getProfile().getLastname()) );
             return appUserDTO;
         }
         return null;
