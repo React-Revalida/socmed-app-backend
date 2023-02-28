@@ -44,6 +44,27 @@ public class FollowsController {
 		return new ResponseEntity<>(followsDTOTbl, null, HttpStatus.SC_OK);
 	}
 	
+	@GetMapping("/following")
+	public ResponseEntity<Set<FollowsTableDTO>> getLoggedInUserFollowing(
+			@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token){
+		String jwtToken = token.replace("Bearer ", "");
+		Jwt jwt = jwtDecoder.decode(jwtToken);
+		String user = jwt.getClaim("user");
+		Set<FollowsTableDTO> followsDTOTbl = followsService.getFollowing(user);
+		return new ResponseEntity<>(followsDTOTbl, null, HttpStatus.SC_OK);
+	}
+	
+	@GetMapping("/followers")
+	public ResponseEntity<Set<FollowsTableDTO>> getLoggedInUserFollowers(
+			@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token){
+		String jwtToken = token.replace("Bearer ", "");
+		Jwt jwt = jwtDecoder.decode(jwtToken);
+		String user = jwt.getClaim("user");
+		Set<FollowsTableDTO> followsDTOTbl = followsService.getFollowers(user);
+		return new ResponseEntity<>(followsDTOTbl, null, HttpStatus.SC_OK);
+	}
+
+	
 	@PostMapping("/follow/{username}")
 	public ResponseEntity<Boolean> followUser(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token, 
 			@PathVariable String username) {

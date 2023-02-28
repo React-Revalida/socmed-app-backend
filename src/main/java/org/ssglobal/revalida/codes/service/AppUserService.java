@@ -1,5 +1,12 @@
 package org.ssglobal.revalida.codes.service;
 
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,12 +22,6 @@ import org.ssglobal.revalida.codes.model.Profile;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
 import org.ssglobal.revalida.codes.repos.FollowsRepository;
 import org.ssglobal.revalida.codes.repos.ProfileRepository;
-
-import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class AppUserService {
@@ -74,6 +75,27 @@ public class AppUserService {
     public AppUserDTO findByUsername(String username) {
         AppUser appUser = appUserRepository.findByUsernameIgnoreCase(username);
         return mapToAppUserDTO(appUser, new AppUserDTO());
+    }
+    
+    public List<String> findAllUsers() {
+    	List<String> names = new ArrayList<>();
+    	List<AppUser> appUserTbl = appUserRepository.findAll();
+    	return mapNamesToTbl(appUserTbl, names);
+    }
+    
+    private List<String> mapNamesToTbl(List<AppUser> appUserTbl, List<String> names) {
+    	for (AppUser user: appUserTbl) {
+    		if (!(user.getProfile().getMiddlename().isBlank())) {
+    			names.add(String.join(" ", user.getProfile().getFirstname(), 
+    					user.getProfile().getMiddlename(), 
+    					user.getProfile().getLastname()));
+    		} else {
+    			names.add(String.join(" ", user.getProfile().getFirstname(), 
+    					user.getProfile().getLastname()));
+    		}
+    	}
+    	
+    	return names;
     }
 
     private AppUserDTO mapToAppUserDTO(AppUser appUser, AppUserDTO appUserDTO) {

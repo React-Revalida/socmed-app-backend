@@ -2,10 +2,13 @@ package org.ssglobal.revalida.codes.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -26,7 +29,6 @@ import org.ssglobal.revalida.codes.service.AppUserService;
 import org.ssglobal.revalida.codes.service.ProfileService;
 
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,6 +83,15 @@ public class AppUserController {
         String username = jwt.getClaim("user");
         AppUserDTO appUserDTO = profileService.updateOrAddAddress(username, addressDTO);
         return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<List<String>> getAllUsers(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
+        String jwtToken = token.replace("Bearer ", "");
+        Jwt jwt = jwtDecoder.decode(jwtToken);
+        String username = jwt.getClaim("user");
+        List<String> namesTbl = appUserService.findAllUsers();
+        return new ResponseEntity<>(namesTbl, HttpStatus.OK);
     }
 
 }
