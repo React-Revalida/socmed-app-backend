@@ -100,7 +100,7 @@ public class PostsService {
 	@Transactional
 	public Set<PostsDTO> editPostById(Integer id, final MultipartFile postImage, final PostsDTO editedPost)
 			throws IOException {
-
+	
 		Optional<Posts> post = postRepository.findById(id);
 		if (postImage != null) {
 			imageService.postUpdate(postDir, postImage, post.get());
