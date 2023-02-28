@@ -32,7 +32,7 @@ public class PostsService {
 
 	private final PostsRepository postRepository;
 	private final AppUserRepository appUserRepository;
-	private final ImageService imageService;	
+	private final ImageService imageService;
 	private final LikesService likesService;
 	private final CommentsService commentsService;
 
@@ -92,23 +92,22 @@ public class PostsService {
 			boolean deleted = postRepository.save(post.get()) != null;
 			if (deleted) {
 				return getPostsByUsername(post.get().getUser().getUsername());
-			}	
+			}
 		}
 		return new HashSet<>();
 	}
-	
+
 	@Transactional
 	public Set<PostsDTO> editPostById(Integer id, final MultipartFile postImage, final PostsDTO editedPost)
 			throws IOException {
-		Posts newImage = new Posts();
-		if (postImage != null) {
-			imageService.postUpload(postDir, postImage, newImage);
-		}
-
+	
 		Optional<Posts> post = postRepository.findById(id);
-		if (post.isPresent()) {
+		if (postImage != null) {
+			imageService.postUpdate(postDir, postImage, post.get());
+		} 
 
-			mapEditedToPostEntity(editedPost, post.get(), newImage);
+		if (post.isPresent()) {
+			mapEditedToPostEntity(editedPost, post.get());
 			boolean isEdited = postRepository.save(post.get()) != null;
 			if (isEdited) {
 				return getPostsByUsername(post.get().getUser().getUsername());
@@ -166,13 +165,8 @@ public class PostsService {
 		post.setUser(user);
 		return post;
 	}
-	
-	private Posts mapEditedToPostEntity(PostsDTO postDTO, Posts post, Posts newImage) {
-		if (newImage != null) {
-			post.setImageUrl(newImage.getImageUrl());
-		} else {
-			post.setImageUrl(post.getImageUrl());
-		}
+
+	private Posts mapEditedToPostEntity(PostsDTO postDTO, Posts post) {
 		post.setMessage(postDTO.getMessage());
 		post.setTimestamp(new Timestamp(System.currentTimeMillis()).toString());
 		return post;

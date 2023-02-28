@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
+import org.ssglobal.revalida.codes.dto.CommentsDTO;
 import org.ssglobal.revalida.codes.dto.LikesDTO;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
+import org.ssglobal.revalida.codes.model.Comments;
 import org.ssglobal.revalida.codes.model.Likes;
 import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
@@ -58,7 +60,44 @@ public class LikesService {
     	}
 		return likesTbl;
 	}
-    
+	@Transactional
+	public Set<PostsDTO> getPostsLikedByUserId(Integer userId){
+		Set<Posts> posts = likesRepository.findAllLikedPostByUserId(userId);
+    	Set<PostsDTO> postsTbl = new HashSet<>();
+    	for (Posts id: posts) {
+    		PostsDTO postDTO = new PostsDTO();
+    		postDTO.setPostId(id.getPostId());
+    		postDTO.setDeleted(id.getDeleted());
+    		postDTO.setImageUrl(id.getImageUrl());
+    		postDTO.setTimestamp(id.getTimestamp());
+    		postDTO.setMessage(id.getMessage());
+    		postDTO.setUser(maptoUserPostTbl(id.getUser()));
+    		postDTO.setComments(maptoCommentsPostTbl(id.getComments(), new HashSet<>()));
+    		postDTO.setMessage(id.getMessage());
+    		postDTO.setLikes(getUsersLikesByPostId(id.getPostId()));
+    		postsTbl.add(postDTO);
+    	}
+		return postsTbl;
+	}
+	private AppUserDTO maptoUserPostTbl(AppUser user) {
+			AppUserDTO userDTO = new AppUserDTO();
+			userDTO.setUserId(user.getUserId());
+			userDTO.setUsername(user.getUsername());
+			userDTO.setFirstname(user.getProfile().getFirstname());
+			userDTO.setLastname(user.getProfile().getLastname());
+			userDTO.setProfilePic(user.getProfile().getProfilePic());
+		
+		return userDTO;
+	}
+	private Set<CommentsDTO> maptoCommentsPostTbl(Set<Comments> comments, Set<CommentsDTO> commentsDTOTbl) {
+		for (Comments comment: comments) {
+			CommentsDTO commentDTO = new CommentsDTO();
+			commentDTO.setId(comment.getId());
+			commentsDTOTbl.add(commentDTO);
+		}
+	
+	return commentsDTOTbl;
+}
 	
 	private Set<LikesDTO> maptoUserLikesTbl(Set<AppUser> likesTbl, Set<LikesDTO> likesDTOTbl) {
 		for (AppUser user: likesTbl) {

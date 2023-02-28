@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.LikesDTO;
+import org.ssglobal.revalida.codes.dto.PostsDTO;
 import org.ssglobal.revalida.codes.service.LikesService;
 
 import jakarta.validation.Valid;
@@ -37,6 +38,13 @@ public class LikesController {
 		return new ResponseEntity<>(likesDTOTbl, null, HttpStatus.SC_OK);
 	}
 	 
+	@GetMapping("/likedpost/{user}")
+	public ResponseEntity<Set<PostsDTO>> getLikedPost(@PathVariable Integer user){
+		Set<PostsDTO> likesDTOTbl = likesService.getPostsLikedByUserId(user);
+		return new ResponseEntity<>(likesDTOTbl, null, HttpStatus.SC_OK);
+	}
+	
+	
 	@PostMapping("/post")
 	public ResponseEntity<Boolean> likePost(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token, 
 			@RequestPart("like") @Valid final LikesDTO likesDTO) throws IOException {
