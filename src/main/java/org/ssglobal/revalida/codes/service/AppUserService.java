@@ -85,7 +85,7 @@ public class AppUserService {
     
     private List<String> mapNamesToTbl(List<AppUser> appUserTbl, List<String> names) {
     	for (AppUser user: appUserTbl) {
-    		if (!(user.getProfile().getMiddlename().isBlank())) {
+    		if (!(user.getProfile().getMiddlename() == null)) {
     			names.add(String.join(" ", user.getProfile().getFirstname(), 
     					user.getProfile().getMiddlename(), 
     					user.getProfile().getLastname()));
