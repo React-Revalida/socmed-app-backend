@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/socmed}
-    #url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5433/socmed} #ayn's port
+    #url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/socmed}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5433/socmed} #ayn's port
     username: ${JDBC_DATABASE_USERNAME:postgres}
     password: ${JDBC_DATABASE_PASSWORD:admin2255}
     dbcp2:
