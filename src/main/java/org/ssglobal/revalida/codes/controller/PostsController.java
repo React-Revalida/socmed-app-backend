@@ -13,13 +13,13 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssglobal.revalida.codes.dto.PostsDTO;
-import org.ssglobal.revalida.codes.model.Posts;
 import org.ssglobal.revalida.codes.service.PostsService;
 
 import jakarta.validation.Valid;
@@ -56,11 +56,17 @@ public class PostsController {
 	}
 
 
-	@PostMapping("/posts/delete/{id}")
+	@PutMapping("/posts/delete/{id}")
 	public Set<PostsDTO> deletePost(@PathVariable Integer id) {
 //		Boolean deleted = postsService.deletePostById(id);
 //		return new ResponseEntity<>(deleted, null, HttpStatus.SC_OK);
 		return postsService.deletePostById(id);
+	}
+	
+	@PutMapping("/posts/edit/{id}")
+	public Set<PostsDTO> editPost(@PathVariable Integer id, @RequestPart("image") MultipartFile postImg,
+			@RequestPart("post") @Valid final PostsDTO postDTO) throws IOException {
+		return postsService.editPostById(id, postImg, postDTO);
 	}
 
 	@PostMapping("/posts")

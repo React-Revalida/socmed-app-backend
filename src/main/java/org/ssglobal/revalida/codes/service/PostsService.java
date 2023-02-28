@@ -96,6 +96,26 @@ public class PostsService {
 		}
 		return new HashSet<>();
 	}
+	
+	@Transactional
+	public Set<PostsDTO> editPostById(Integer id, final MultipartFile postImage, final PostsDTO editedPost)
+			throws IOException {
+		Posts newImage = new Posts();
+		if (postImage != null) {
+			imageService.postUpload(postDir, postImage, newImage);
+		}
+
+		Optional<Posts> post = postRepository.findById(id);
+		if (post.isPresent()) {
+
+			mapEditedToPostEntity(editedPost, post.get(), newImage);
+			boolean isEdited = postRepository.save(post.get()) != null;
+			if (isEdited) {
+				return getPostsByUsername(post.get().getUser().getUsername());
+			}
+		}
+		return new HashSet<>();
+	}
 
 	@Transactional
 	public Set<PostsDTO> createPost(final PostsDTO postDTO, final MultipartFile postImage, String username)
@@ -144,6 +164,17 @@ public class PostsService {
 		post.setPostId(postDTO.getPostId());
 		post.setTimestamp(new Timestamp(System.currentTimeMillis()).toString());
 		post.setUser(user);
+		return post;
+	}
+	
+	private Posts mapEditedToPostEntity(PostsDTO postDTO, Posts post, Posts newImage) {
+		if (newImage != null) {
+			post.setImageUrl(newImage.getImageUrl());
+		} else {
+			post.setImageUrl(post.getImageUrl());
+		}
+		post.setMessage(postDTO.getMessage());
+		post.setTimestamp(new Timestamp(System.currentTimeMillis()).toString());
 		return post;
 	}
 
