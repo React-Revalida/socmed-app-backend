@@ -1,7 +1,8 @@
 package org.ssglobal.revalida.codes.service.auth;
 
-import org.ssglobal.revalida.codes.model.AppUser;
-import org.ssglobal.revalida.codes.repos.AppUserRepository;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,9 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
+import org.ssglobal.revalida.codes.model.AppUser;
+import org.ssglobal.revalida.codes.repos.AppUserRepository;
+import org.ssglobal.revalida.codes.util.NotFoundException;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
@@ -31,6 +32,11 @@ public class AppUserDetailsService implements UserDetailsService {
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(Boolean validated) {
         return List.of(new SimpleGrantedAuthority(validated ? "USER_VALIDATED" : "USER_NOT_VALIDATED"));
+    }
+    
+    public UserDetails loadUserByEmail(String email) throws Exception {
+    	AppUser user = appUserRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email not found"));
+    	return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getIsValidated()));
     }
 
 }

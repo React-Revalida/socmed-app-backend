@@ -31,4 +31,13 @@ public class AuthService {
         LOG.info("Token generated for user {}", authentication.getName());
         return new TokenDTO(token);
     }
+    
+    public TokenDTO forgotPassword(String email) throws Exception {
+    	LOG.info("Reset token request for email {}", email);
+    	UserDetails userDetails = appUserDetailsService.loadUserByEmail(email);
+    	
+    	String token = tokenService.generateResetToken(userDetails);
+    	LOG.info("Reset token generated for email {}", email);
+    	return new TokenDTO(token);
+    }
 }

@@ -2,6 +2,7 @@ package org.ssglobal.revalida.codes.service.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -40,4 +41,19 @@ public class TokenService {
                 .build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
+    
+    public String generateResetToken(UserDetails userDetails) {
+    	Instant now = Instant.now();
+    	Integer userId = appUserRepository.findByUsername(userDetails.getUsername()).get().getUserId();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))
+                .subject(userDetails.getUsername())
+                .claim("user", userDetails.getUsername())
+                .claim("userId", userId)
+                .build();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+   
 }
