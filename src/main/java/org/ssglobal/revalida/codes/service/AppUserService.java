@@ -72,6 +72,21 @@ public class AppUserService {
         appUserRepository.save(appUser);
         LOG.info("User {} created", appUser.getUsername());
     }
+    
+    @Transactional
+    public Boolean updateUserPassword(String username, String newPassword) {
+    	try {
+        	AppUser appUser = appUserRepository.findByUsernameIgnoreCase(username);
+        	String encodedPassword = passwordEncoder.encode(newPassword);
+        	appUser.setPassword(encodedPassword);
+        	appUserRepository.save(appUser);
+        	return true;		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return false;
+    }
 
     public AppUserDTO findByUsername(String username) {
         AppUser appUser = appUserRepository.findByUsernameIgnoreCase(username);

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,6 +92,16 @@ public class AppUserController {
         String username = jwt.getClaim("user");
         Map<String, String> namesTbl = appUserService.findAllUsers();
         return new ResponseEntity<>(namesTbl, HttpStatus.OK);
+    }
+    
+    @PutMapping("/update-password")
+    public ResponseEntity<Boolean> updateUserPassword(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token, 
+    		@RequestParam String password) {
+        String jwtToken = token.replace("Bearer ", "");
+        Jwt jwt = jwtDecoder.decode(jwtToken);
+        String username = jwt.getClaim("user");
+        Boolean updated = appUserService.updateUserPassword(username, password);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
 }
