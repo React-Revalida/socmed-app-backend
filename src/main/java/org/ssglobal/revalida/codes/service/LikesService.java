@@ -59,6 +59,7 @@ public class LikesService {
 			AppUserDTO userDTO = new AppUserDTO();
 			userDTO.setUsername(id.getUsername());
 			userDTO.setUserId(id.getUserId());
+			userDTO.setProfilePic(id.getProfile().getProfilePic());
 			likesTbl.add(userDTO);
 		}
 		return likesTbl;

@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.ssglobal.revalida.codes.dto.AppUserDTO;
 import org.ssglobal.revalida.codes.dto.CommentsDTO;
+import org.ssglobal.revalida.codes.dto.ProfileDTO;
 import org.ssglobal.revalida.codes.model.AppUser;
 import org.ssglobal.revalida.codes.model.Comments;
 import org.ssglobal.revalida.codes.model.Likes;
 import org.ssglobal.revalida.codes.model.Posts;
+import org.ssglobal.revalida.codes.model.Profile;
 import org.ssglobal.revalida.codes.repos.AppUserRepository;
 import org.ssglobal.revalida.codes.repos.CommentsRepository;
 import org.ssglobal.revalida.codes.repos.PostsRepository;
@@ -63,12 +65,23 @@ public class CommentsService {
 			AppUserDTO appUserDTO = new AppUserDTO();
 			appUserDTO.setUserId(appUser.getUserId());
 			appUserDTO.setUsername(appUser.getUsername());
+			appUserDTO.setProfilePic(appUser.getProfile().getProfilePic());
 			appUserDTO.setName(String.join(" ", appUser.getProfile().getFirstname(), appUser.getProfile().getLastname()) );
             return appUserDTO;
         }
         return null;
 	}
 
+	
+	private ProfileDTO mapToProfileDTO(Profile profile) {
+		if (profile != null) {
+			ProfileDTO profileDTO = new ProfileDTO();
+			profileDTO.setProfilePic(profile.getProfilePic());
+            return profileDTO;
+        }
+		return null;
+	}
+	
 //	@Transactional
 	public Boolean createComment(@Valid CommentsDTO commentsDTO)
 			throws IOException {
