@@ -66,22 +66,13 @@ public class AppUserController {
     public ResponseEntity<AppUserDTO> updateMyProfile(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
             @RequestPart("user") @Valid final ProfileDTO profileDTO,
-            @RequestPart("profile") MultipartFile profilePic) throws IOException {
+            @RequestPart("profile") MultipartFile profilePic,
+            @RequestPart("cover") MultipartFile coverPic
+            ) throws IOException {
         String jwtToken = token.replace("Bearer ", "");
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");
-        AppUserDTO appUserDTO = profileService.updateProfile(username, profileDTO, profilePic);
-        return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
-    }
-
-    @PutMapping(value = "/me/update-cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AppUserDTO> updateMyCover(
-            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
-            @RequestPart("cover") MultipartFile coverPic) throws IOException {
-        String jwtToken = token.replace("Bearer ", "");
-        Jwt jwt = jwtDecoder.decode(jwtToken);
-        String username = jwt.getClaim("user");
-        AppUserDTO appUserDTO = profileService.addOrUpdateCoverPhoto(username, coverPic);
+        AppUserDTO appUserDTO = profileService.updateProfile(username, profileDTO, profilePic, coverPic);
         return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
     }
 

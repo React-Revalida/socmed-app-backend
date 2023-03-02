@@ -40,7 +40,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public AppUserDTO updateProfile(String username, ProfileDTO profileDTO, final MultipartFile profilePicture)
+    public AppUserDTO updateProfile(String username, ProfileDTO profileDTO, final MultipartFile profilePicture, final MultipartFile coverPhoto)
             throws IOException {
         Profile profile = profileRepository.findByProfile_Username(username);
         if (profile == null) {
@@ -49,24 +49,15 @@ public class ProfileService {
         if (profilePicture != null) {
             imageService.profileUpdate(profileDir, profilePicture, profile);
         }
+        if (coverPhoto != null) {
+            imageService.coverAddOrUpdate(coverDir, coverPhoto, profile);
+        }
         mapToProfileEntity(profileDTO, profile);
         boolean isUpdated = profileRepository.save(profile) != null;
         if (isUpdated) {
             return appUserService.findByUsername(username);
         }
         return null;
-    }
-
-    public AppUserDTO addOrUpdateCoverPhoto(final String username, final MultipartFile coverPhoto) throws IOException {
-        Profile profile = profileRepository.findByProfile_Username(username);
-        if (coverPhoto != null) {
-            imageService.coverAddOrUpdate(coverDir, coverPhoto, profile);
-        }
-        boolean isUpdated = profileRepository.save(profile) != null;
-        if (isUpdated) {
-            return appUserService.findByUsername(username);
-        }
-        return appUserService.findByUsername(username);
     }
 
     @Transactional
