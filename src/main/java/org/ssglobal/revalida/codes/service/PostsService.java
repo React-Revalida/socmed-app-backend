@@ -102,9 +102,9 @@ public class PostsService {
 			throws IOException {
 	
 		Optional<Posts> post = postRepository.findById(id);
-		if (postImage != null) {
+		// if (postImage != null) {
 			imageService.postUpdate(postDir, postImage, post.get());
-		} 
+		// } 
 
 		if (post.isPresent()) {
 			mapEditedToPostEntity(editedPost, post.get());

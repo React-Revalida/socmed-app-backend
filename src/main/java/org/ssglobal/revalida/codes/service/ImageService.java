@@ -93,6 +93,13 @@ public class ImageService {
 	public Posts postUpdate(String directory2Upload, MultipartFile multipartFile, Posts post) throws IOException {
 
 		if (multipartFile.isEmpty()) {
+			//check if the post has an image
+			if(post.getImageUrl() != null && !post.getImageUrl().isEmpty()) {
+				//delete the image from the server
+				deleteImageFromServer(post.getImageUrl());
+			}			
+			//set the image url to empty
+			post.setImageUrl("");
 			return post;
 		}
 
