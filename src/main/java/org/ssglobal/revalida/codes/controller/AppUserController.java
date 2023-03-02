@@ -74,6 +74,17 @@ public class AppUserController {
         return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/me/update-cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AppUserDTO> updateMyCover(
+            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
+            @RequestPart("cover") MultipartFile coverPic) throws IOException {
+        String jwtToken = token.replace("Bearer ", "");
+        Jwt jwt = jwtDecoder.decode(jwtToken);
+        String username = jwt.getClaim("user");
+        AppUserDTO appUserDTO = profileService.addOrUpdateCoverPhoto(username, coverPic);
+        return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
+    }
+
     @PutMapping("/me/update-address")
     public ResponseEntity<AppUserDTO> updateMyAddress(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
@@ -84,19 +95,20 @@ public class AppUserController {
         AppUserDTO appUserDTO = profileService.updateOrAddAddress(username, addressDTO);
         return new ResponseEntity<>(appUserDTO, HttpStatus.OK);
     }
-    
+
     @GetMapping("/all")
-    public ResponseEntity<Map<String, String>> getAllUsers(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<Map<String, String>> getAllUsers(
+            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         String jwtToken = token.replace("Bearer ", "");
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");
         Map<String, String> namesTbl = appUserService.findAllUsers();
         return new ResponseEntity<>(namesTbl, HttpStatus.OK);
     }
-    
+
     @PutMapping("/update-password")
-    public ResponseEntity<Boolean> updateUserPassword(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token, 
-    		@RequestBody Map<String, String> data) {
+    public ResponseEntity<Boolean> updateUserPassword(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
+            @RequestBody Map<String, String> data) {
         String jwtToken = token.replace("Bearer ", "");
         Jwt jwt = jwtDecoder.decode(jwtToken);
         String username = jwt.getClaim("user");

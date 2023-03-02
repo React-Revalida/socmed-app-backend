@@ -29,3 +29,4 @@ do:
     bucket: seven-seven-global-revalida-r2
     profile-dir: profile-images/
     post-dir: post-images/
+    cover-dir: cover-images/

@@ -61,6 +61,20 @@ public class ImageService {
 		return profile;
 	}
 
+	public Profile coverAddOrUpdate(String directory2Upload, MultipartFile multipartFile, Profile profile)
+			throws IOException {
+		if (multipartFile.isEmpty()) {
+			return profile;
+		}
+		String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+		String imgName = FilenameUtils.removeExtension(multipartFile.getOriginalFilename());
+		imgName = "cover" + "_" + System.currentTimeMillis();
+		String key = directory2Upload + imgName + "." + extension;
+		updateImageToServer(multipartFile, key, profile.getCoverPic());
+		profile.setCoverPic(key);
+		return profile;
+	}
+
 	public Posts postUpload(String directory2Upload, MultipartFile multipartFile, Posts post) throws IOException {
 		if (multipartFile.isEmpty()) {
 			post.setImageUrl("");

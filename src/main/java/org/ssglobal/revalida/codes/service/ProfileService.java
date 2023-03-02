@@ -28,6 +28,9 @@ public class ProfileService {
     @Value("${do.space.profile-dir}")
     private String profileDir;
 
+    @Value("${do.space.cover-dir}")
+    private String coverDir;
+
     public ProfileService(ProfileRepository profileRepository, AddressRepository addressRepository,
             ImageService imageService, AppUserService appUserService) {
         this.profileRepository = profileRepository;
@@ -52,6 +55,18 @@ public class ProfileService {
             return appUserService.findByUsername(username);
         }
         return null;
+    }
+
+    public AppUserDTO addOrUpdateCoverPhoto(final String username, final MultipartFile coverPhoto) throws IOException {
+        Profile profile = profileRepository.findByProfile_Username(username);
+        if (coverPhoto != null) {
+            imageService.coverAddOrUpdate(coverDir, coverPhoto, profile);
+        }
+        boolean isUpdated = profileRepository.save(profile) != null;
+        if (isUpdated) {
+            return appUserService.findByUsername(username);
+        }
+        return appUserService.findByUsername(username);
     }
 
     @Transactional

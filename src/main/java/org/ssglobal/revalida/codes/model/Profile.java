@@ -75,6 +75,9 @@ public class Profile {
     @Column(columnDefinition = "text")
     private String profilePic;
 
+    @Column(columnDefinition = "text")
+    private String coverPic;
+
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private AppUser profile;
 

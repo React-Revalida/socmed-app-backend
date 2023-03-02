@@ -136,6 +136,7 @@ public class AppUserService {
         appUserDTO.setBio(appUser.getProfile().getDescription());
         appUserDTO.setGender(appUser.getProfile().getGender().toString());
         appUserDTO.setProfilePic(imageService.getImageUrl(appUser.getProfile().getProfilePic()));
+        appUserDTO.setCoverPic(imageService.getImageUrl(appUser.getProfile().getCoverPic()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
         String dateJoined = appUser.getDateCreated().format(formatter);
         appUserDTO.setDateJoined(dateJoined);
